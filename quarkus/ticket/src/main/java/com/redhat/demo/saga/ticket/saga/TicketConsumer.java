@@ -1,4 +1,4 @@
-package com.redhat.demo.saga.ticket.service;
+package com.redhat.demo.saga.ticket.saga;
 
 
 import io.smallrye.reactive.messaging.annotations.Broadcast;

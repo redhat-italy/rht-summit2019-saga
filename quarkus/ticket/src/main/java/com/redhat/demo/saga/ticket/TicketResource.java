@@ -1,6 +1,6 @@
 package com.redhat.demo.saga.ticket;
 
-import com.redhat.demo.saga.ticket.service.TicketProducer;
+import com.redhat.demo.saga.ticket.saga.TicketProducer;
 import io.smallrye.reactive.messaging.annotations.Stream;
 import org.reactivestreams.Publisher;
 
