@@ -10,8 +10,6 @@ import java.util.concurrent.TimeUnit;
 @ApplicationScoped
 public class TicketProducer {
 
-    private static final double CONVERSION_RATE = 0.88;
-
     private Random random = new Random();
 
     @Outgoing("tickets")

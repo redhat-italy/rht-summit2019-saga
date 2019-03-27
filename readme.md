@@ -1,13 +1,22 @@
 Saga microservices Playground
 =============================
 
-## Quarkus
+## Saga Choreography with Quarkus
 
-### Install on OpenShift
+### Create Native Image
+
+Launch the script to create:
+
+```bash
+cd quarkus/
+./build-image.sh
+```
+
+### Deploy on OpenShift
 
 Launch the bootstrap script to create your namespace:
 
 ```bash
-cd quarkus/openshift/
-./launch.sh
+cd quarkus/
+./deploy-ocp.sh
 ```
