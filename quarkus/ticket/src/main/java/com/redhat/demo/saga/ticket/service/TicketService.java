@@ -17,7 +17,10 @@ public class TicketService {
     EntityManager entityManager;
 
     @Transactional
-    public void createTicket(Ticket ticket) {
+    public void bookTicket(Ticket ticket) {
+
+        //TODO check if there is a PENDING for the same account id
+
         entityManager.persist(ticket);
         entityManager.flush();
 
@@ -28,5 +31,21 @@ public class TicketService {
 
         entityManager.persist(ticketEvent);
         entityManager.flush();
+    }
+
+    @Transactional
+    public void onPaymentCreated() {
+
+        //TODO check if event is already processed
+
+        //process event
+
+        //persist message log
+
+    }
+
+    @Transactional
+    public void onPaymentRefused() {
+
     }
 }

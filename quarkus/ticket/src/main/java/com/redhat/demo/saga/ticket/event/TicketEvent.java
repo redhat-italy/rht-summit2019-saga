@@ -9,6 +9,7 @@ public class TicketEvent {
 
     @Id
     private Long id;
+    private String accountId;
     private Long ticketId;
     private TicketEventType ticketEventType;
     private LocalDate createdOn;
@@ -44,4 +45,13 @@ public class TicketEvent {
     public void setCreatedOn(LocalDate createdOn) {
         this.createdOn = createdOn;
     }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
 }

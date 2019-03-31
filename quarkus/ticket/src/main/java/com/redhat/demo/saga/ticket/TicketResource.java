@@ -1,8 +1,6 @@
 package com.redhat.demo.saga.ticket;
 
-import com.redhat.demo.saga.ticket.saga.TicketProducer;
-import io.smallrye.reactive.messaging.annotations.Stream;
-import org.reactivestreams.Publisher;
+import com.redhat.demo.saga.ticket.service.TicketService;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -14,11 +12,7 @@ import javax.ws.rs.core.MediaType;
 public class TicketResource {
 
     @Inject
-    @Stream("tickets-data-stream")
-    Publisher<Double> prices;
-
-    @Inject
-    TicketProducer ticketProducer;
+    TicketService ticketService;
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -26,10 +20,4 @@ public class TicketResource {
         return "hello";
     }
 
-    @GET
-    @Path("/stream")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Publisher<Double> stream() {
-        return prices;
-    }
 }

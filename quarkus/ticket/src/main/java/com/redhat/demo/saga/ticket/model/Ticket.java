@@ -9,6 +9,8 @@ public class Ticket {
 
     @Id
     private Long id;
+    private TicketState state;
+    private String accountId;
     private String name;
     private String numberOfPersons;
     private LocalDate eventDate;
@@ -52,5 +54,21 @@ public class Ticket {
 
     public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public TicketState getState() {
+        return state;
+    }
+
+    public void setState(TicketState state) {
+        this.state = state;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 }
