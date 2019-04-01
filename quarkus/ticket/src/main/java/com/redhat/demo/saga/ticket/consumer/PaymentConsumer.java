@@ -1,10 +1,8 @@
 package com.redhat.demo.saga.ticket.consumer;
 
 
-import com.redhat.demo.saga.ticket.model.Ticket;
 import com.redhat.demo.saga.ticket.service.TicketService;
 import io.smallrye.reactive.messaging.kafka.KafkaMessage;
-import io.vertx.core.json.JsonObject;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -20,7 +18,7 @@ public class PaymentConsumer {
 
 
     @Incoming("payments")
-    public CompletionStage<Void> onMessage(KafkaMessage<String, JsonObject> message) throws IOException {
+    public CompletionStage<Void> onMessage(KafkaMessage<String, String> message) throws IOException {
         try {
             //TODO if payment accepted
 

@@ -90,5 +90,10 @@ public class TicketService {
             return;
         }
 
+        //TODO
+        //process event
+
+        //persist message log
+
     }
 }
