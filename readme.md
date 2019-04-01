@@ -9,7 +9,7 @@ Docker Containers:
  - Postgres (image debezium/postgres) on local port 5432
  - Zookeeper (image debezium/zookeeper) on local port 2181
  - Kafka (image debezium/kafka) on local port 9092
- - Kafka Connect + Debezium (image debezium/connect) on local port 8083
+ - Kafka Connect + Debezium (image hifly81/debezium-connect) on local port 8083
  - Ticket Service (image hifly81/quarkus-ticket-service) on local port 8080
 
 ```bash
