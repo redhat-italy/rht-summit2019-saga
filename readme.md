@@ -6,8 +6,8 @@ Saga microservices Playground
 ### Launch on local env
 
 ```bash
-cd ticket/
-./mvnw compile quarkus:dev
+cd quarkus/
+./deploy-local.sh
 ```
 
 ### Create Native Image
