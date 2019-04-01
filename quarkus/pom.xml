@@ -18,6 +18,7 @@
 
 
     <modules>
+        <module>debezium</module>
         <module>ticket</module>
         <!--<module>insurance</module>-->
         <!--<module>payment</module>-->
