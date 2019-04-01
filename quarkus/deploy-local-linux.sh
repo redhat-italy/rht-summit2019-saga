@@ -1,5 +1,8 @@
 #!/bin/bash
 
+DOCKER_HOST=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+echo "Docker host: ${DOCKER_HOST}"
+
 ############################ Docker prune
 echo "Deleting Docker containers running for Debezium...."
 docker stop $(docker ps -a | grep debezium/connect | cut -d ' ' -f 1)
@@ -42,7 +45,7 @@ echo "Kafka started."
 
 echo "Start Debezium Kafka connect container...."
 
-docker run -d --name connect -p 8083:8083 -e GROUP_ID=1 -e CONFIG_STORAGE_TOPIC=my-connect-configs -e OFFSET_STORAGE_TOPIC=my-connect-offsets -e ADVERTISED_HOST_NAME=172.17.0.1 --link zookeeper:zookeeper --link postgres:postgres --link kafka:kafka debezium/connect
+docker run -d --name connect -p 8083:8083 -e GROUP_ID=1 -e CONFIG_STORAGE_TOPIC=my-connect-configs -e OFFSET_STORAGE_TOPIC=my-connect-offsets -e ADVERTISED_HOST_NAME=${DOCKER_HOST} --link zookeeper:zookeeper --link postgres:postgres --link kafka:kafka debezium/connect
 sleep 5
 echo "CREATE kafka connector ticket-connector...."
 curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @debezium/connect-pgsql-kafka.json

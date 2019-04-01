@@ -3,11 +3,11 @@ Saga microservices Playground
 
 ## Saga Choreography with Quarkus
 
-### Launch on local env
+### Launch on local env - linux
 
 ```bash
 cd quarkus/
-./deploy-local.sh
+./deploy-local-linux.sh
 ```
 
 ### Create Native Image
