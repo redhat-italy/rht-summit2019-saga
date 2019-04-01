@@ -1,25 +1,34 @@
 package com.redhat.demo.saga.ticket.event;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.time.LocalDate;
+import javax.persistence.*;
+import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 public class TicketEvent {
 
+    //orderId is the correlationId
     @Id
-    private Long id;
-    private String accountId;
-    private Long ticketId;
-    private TicketEventType ticketEventType;
-    private LocalDate createdOn;
+    private String correlationId;
 
-    public Long getId() {
-        return id;
+    @Column(nullable = false)
+    private Long ticketId;
+
+    @Column(nullable = false)
+    private String accountId;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TicketEventType ticketEventType;
+
+    private Instant createdOn;
+
+    public String getCorrelationId() {
+        return correlationId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
     }
 
     public Long getTicketId() {
@@ -38,11 +47,11 @@ public class TicketEvent {
         this.ticketEventType = ticketEventType;
     }
 
-    public LocalDate getCreatedOn() {
+    public Instant getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDate createdOn) {
+    public void setCreatedOn(Instant createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -53,5 +62,6 @@ public class TicketEvent {
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
+
 
 }

@@ -1,20 +1,38 @@
 package com.redhat.demo.saga.ticket.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.time.LocalDate;
+import javax.persistence.*;
 
 @Entity
+@NamedQuery(name = "Ticket.findByAccountAndState",
+        query = "SELECT t FROM Ticket t where t.accountId = :accountId and state = :state")
 public class Ticket {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String orderId;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private TicketState state;
+
+    @Column(nullable = false)
     private String accountId;
+
     private String name;
+
     private String numberOfPersons;
-    private LocalDate eventDate;
+
     private Double totalCost;
+
+    @Transient
+    private String messageOnTicket;
+    @Transient
+    private String messageSeverityTicket;
+
 
     public Long getId() {
         return id;
@@ -40,14 +58,6 @@ public class Ticket {
         this.numberOfPersons = numberOfPersons;
     }
 
-    public LocalDate getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(LocalDate eventDate) {
-        this.eventDate = eventDate;
-    }
-
     public Double getTotalCost() {
         return totalCost;
     }
@@ -70,5 +80,29 @@ public class Ticket {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getMessageOnTicket() {
+        return messageOnTicket;
+    }
+
+    public void setMessageOnTicket(String messageOnTicket) {
+        this.messageOnTicket = messageOnTicket;
+    }
+
+    public String getMessageSeverityTicket() {
+        return messageSeverityTicket;
+    }
+
+    public void setMessageSeverityTicket(String messageSeverityTicket) {
+        this.messageSeverityTicket = messageSeverityTicket;
     }
 }
