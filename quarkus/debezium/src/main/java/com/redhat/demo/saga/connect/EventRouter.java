@@ -38,23 +38,31 @@ public class EventRouter<R extends ConnectRecord<R>> implements Transformation<R
             String accountid = after.getString("accountid");
             Long createdon = after.getInt64("createdon");
 
+            //Optional fields
+            Long totalcost = 0l;
+            try {
+                totalcost = after.getInt64("totalcost");
+            } catch (Exception ex) {}
+
             Schema valueSchema = SchemaBuilder.struct()
                 .field("ticketeventtype", after.schema().field("ticketeventtype").schema())
                 .field("createdon", after.schema().field("createdon").schema())
                 .field("ticketid", after.schema().field("ticketid").schema())
                 .field("accountid", after.schema().field("accountid").schema())
+                .field("totalcost", after.schema().field("totalcost").schema())
                 .build();
 
             Struct value = new Struct(valueSchema)
                 .put("ticketeventtype", ticketeventtype)
                 .put("createdon", createdon)
                 .put("ticketid", ticketid)
-                .put("accountid", accountid);
+                .put("accountid", accountid)
+                .put("totalcost", totalcost);
 
             Headers headers = record.headers();
             headers.addString("correlationid", key);
 
-
+            //TODO get topic name from event
             return record.newRecord("tickets", null, Schema.STRING_SCHEMA, key, valueSchema, value,
                     record.timestamp(), headers);
         }

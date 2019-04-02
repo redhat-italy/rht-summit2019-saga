@@ -3,7 +3,7 @@ Saga microservices Playground
 
 ## Saga Choreography with Quarkus
 
-### Launch on local env - linux
+### Launch on local env - linux and mac
 
 Docker Containers:
  - Postgres (image debezium/postgres) on local port 5432
@@ -12,10 +12,20 @@ Docker Containers:
  - Kafka Connect + Debezium (image hifly81/debezium-connect) on local port 8083
  - Ticket Service (image hifly81/quarkus-ticket-service) on local port 8080
 
+For Linux users:
+
 ```bash
 cd quarkus/
 ./deploy-local-linux.sh
 ```
+
+For Mac users:
+
+```bash
+cd quarkus/
+./deploy-local-mac.sh
+```
+
 1 ticket will be created (payload in file ticket/tickets.json)
 
 

@@ -1,5 +1,6 @@
 package com.redhat.demo.saga.ticket.service;
 
+import com.redhat.demo.saga.ticket.event.ProcessedEvent;
 import com.redhat.demo.saga.ticket.event.TicketEvent;
 import com.redhat.demo.saga.ticket.event.TicketEventType;
 import com.redhat.demo.saga.ticket.model.Ticket;
@@ -75,8 +76,14 @@ public class TicketService {
             return;
         }
 
+        //create ProcessedEvent
+        ProcessedEvent processedEvent = new ProcessedEvent();
+        processedEvent.setCorrelationId(correlationId);
+        processedEvent.setReceivedOn(Instant.now());
+        eventService.processEvent(processedEvent);
+
         //TODO
-        //process event
+        //process payment event
 
         //persist message log
 
@@ -90,8 +97,14 @@ public class TicketService {
             return;
         }
 
+        //create ProcessedEvent
+        ProcessedEvent processedEvent = new ProcessedEvent();
+        processedEvent.setCorrelationId(correlationId);
+        processedEvent.setReceivedOn(Instant.now());
+        eventService.processEvent(processedEvent);
+
         //TODO
-        //process event
+        //process payment event
 
         //persist message log
 

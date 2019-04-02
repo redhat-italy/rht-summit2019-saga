@@ -26,7 +26,7 @@ echo -e "\nStart Postgresql container...."
 docker run -d --name postgres -p 5432:5432 debezium/postgres
 sleep 5
 echo -e "\nCREATE tickets database...."
-psql -h localhost -p 5432 -U postgres -c 'CREATE DATABASE tickets;'
+docker exec -it postgres psql -h localhost -p 5432 -U postgres -c 'CREATE DATABASE tickets;'
 echo -e "\nPostgresql started."
 
 ############################ Zookeeper
@@ -76,5 +76,5 @@ echo -e "\n\nVerify Change Data Capture [tickets kafka topic]..."
 docker exec -it kafka /bin/bash -c "cat data/1/tickets-0/00000000000000000000.log"
 sleep 5
 echo -e "\n\nVerify TicketEvent Table..."
-psql -h localhost -p 5432 -U postgres -d tickets -c 'select * from ticketevent;'
+docker exec -it postgres psql -h localhost -p 5432 -U postgres -d tickets -c 'select * from ticketevent;'
 

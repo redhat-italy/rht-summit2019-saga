@@ -20,6 +20,9 @@ public class TicketEvent {
     @Enumerated(EnumType.STRING)
     private TicketEventType ticketEventType;
 
+    @Column(nullable = false)
+    private Double totalCost;
+
     private Instant createdOn;
 
     public String getCorrelationId() {
@@ -63,4 +66,11 @@ public class TicketEvent {
     }
 
 
+    public Double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(Double totalCost) {
+        this.totalCost = totalCost;
+    }
 }
