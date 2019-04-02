@@ -27,6 +27,9 @@ docker run -d --name postgres -p 5432:5432 debezium/postgres
 sleep 5
 echo -e "\nCREATE tickets database...."
 docker exec -it postgres psql -h localhost -p 5432 -U postgres -c 'CREATE DATABASE tickets;'
+sleep 5
+echo -e "\nCREATE payments database...."
+docker exec -it postgres psql -h localhost -p 5432 -U postgres -c 'CREATE DATABASE payments;'
 echo -e "\nPostgresql started."
 
 ############################ Zookeeper
@@ -43,21 +46,16 @@ sleep 5
 docker run -it --rm --link zookeeper:zookeeper debezium/kafka create-topic -r 1 schema-changes.tickets
 echo -e "\nKafka started."
 
-############################ Debezium - Kafka Connect
-
-#echo -e "\nStart Debezium Kafka connect container...."
-#docker run -d --name connect -p 8083:8083 -e GROUP_ID=1 -e CONFIG_STORAGE_TOPIC=my-connect-configs -e OFFSET_STORAGE_TOPIC=my-connect-offsets -e ADVERTISED_HOST_NAME=${DOCKER_HOST} --link zookeeper:zookeeper --link postgres:postgres --link kafka:kafka debezium/connect
-#sleep 5
-#echo -e "\nCREATE kafka connector ticket-connector...."
-#curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @debezium/connect-pgsql-kafka.json
-#echo -e "\nKafka Connect started."
-
 ############################ Debezium - Kafka Connect with transformation
 echo -e "\nStart Debezium Kafka connect container...."
 docker run -d --name connect -p 8083:8083 -e BOOTSTRAP_SERVERS=kafka:9092 -e GROUP_ID=1 -e CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE=false -e CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE=false -e CONFIG_STORAGE_TOPIC=my-connect-configs -e OFFSET_STORAGE_TOPIC=my-connect-offsets -e ADVERTISED_HOST_NAME=${DOCKER_HOST} --link zookeeper:zookeeper --link postgres:postgres --link kafka:kafka hifly81/debezium-connect
 sleep 5
 echo -e "\nCREATE kafka connector ticket-connector...."
-curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @debezium/connect-pgsql-kafka-transform.json
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @debezium/ticket-connector.json
+sleep 5
+echo -e "\nCREATE kafka connector payment-connector...."
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @debezium/payment-connector.json
+
 echo -e "\nKafka Connect started."
 
 ########################### Ticket Application
@@ -72,9 +70,9 @@ curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" loc
 
 ########################### Verify Environment
 sleep 5
-echo -e "\n\nVerify Change Data Capture [tickets kafka topic]..."
-docker exec -it kafka /bin/bash -c "cat data/1/tickets-0/00000000000000000000.log"
-sleep 5
 echo -e "\n\nVerify TicketEvent Table..."
 docker exec -it postgres psql -h localhost -p 5432 -U postgres -d tickets -c 'select * from ticketevent;'
+sleep 5
+echo -e "\n\nVerify PaymentEvent Table..."
+docker exec -it postgres psql -h localhost -p 5432 -U postgres -d payments -c 'select * from paymentevent;'
 

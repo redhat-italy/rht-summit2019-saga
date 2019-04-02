@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.CompletionStage;
 
 @ApplicationScoped
-public class PaymentConsumer {
+public class TicketEventConsumer {
 
     @Inject
     TicketService ticketService;

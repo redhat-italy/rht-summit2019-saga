@@ -7,11 +7,12 @@
     "database.port": "5432",
     "database.user": "postgres",
     "database.password": "postgres",
-    "database.dbname" : "tickets",
+    "database.dbname" : "payments",
     "database.server.name": "dbserver1",
     "schema.whitelist": "public",
-    "table.whitelist" : "public.ticketevent",
-    "database.history.kafka.bootstrap.servers": "kafka:9092",
-    "database.history.kafka.topic": "schema-changes.tickets"
+    "table.whitelist" : "public.paymentevent",
+    "tombstones.on.delete" : "false",
+    "transforms" : "router",
+    "transforms.router.type" : "com.redhat.demo.saga.connect.EventRouter"
   }
 }

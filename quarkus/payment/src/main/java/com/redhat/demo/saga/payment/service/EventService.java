@@ -1,6 +1,6 @@
-package com.redhat.demo.saga.ticket.service;
+package com.redhat.demo.saga.payment.service;
 
-import com.redhat.demo.saga.ticket.event.ProcessedEvent;
+import com.redhat.demo.saga.payment.event.ProcessedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

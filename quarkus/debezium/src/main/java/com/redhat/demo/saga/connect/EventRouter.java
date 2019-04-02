@@ -39,9 +39,9 @@ public class EventRouter<R extends ConnectRecord<R>> implements Transformation<R
             Long createdon = after.getInt64("createdon");
 
             //Optional fields
-            Long totalcost = 0l;
+            Double totalcost = 0.0;
             try {
-                totalcost = after.getInt64("totalcost");
+                totalcost = after.getFloat64("totalcost");
             } catch (Exception ex) {}
 
             Schema valueSchema = SchemaBuilder.struct()

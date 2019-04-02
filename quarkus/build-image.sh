@@ -3,6 +3,9 @@
 image_ticket_name=ticket
 image_ticket_version=latest
 
+image_payment_name=payment
+image_payment_version=latest
+
 image_debezium_name=debezium-connect
 image_debezium_version=latest
 
@@ -12,6 +15,13 @@ image_debezium_version=latest
 cd ticket/
 mvn package -Pnative -Dnative-image.docker-build=true
 docker build -f Dockerfile.native -t ${image_ticket_name}:${image_ticket_version} .
+
+############################ Payment Service
+
+#create image
+cd payment/
+mvn package -Pnative -Dnative-image.docker-build=true
+docker build -f Dockerfile.native -t ${image_payment_name}:${image_payment_version} .
 
 ############################ Debezium Connect Service
 

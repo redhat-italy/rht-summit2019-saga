@@ -1,4 +1,4 @@
-package com.redhat.demo.saga.ticket;
+package com.redhat.demo.saga.payment;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
