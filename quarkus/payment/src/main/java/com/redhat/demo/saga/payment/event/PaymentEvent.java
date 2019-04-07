@@ -11,6 +11,9 @@ public class PaymentEvent {
     private String correlationId;
 
     @Column(nullable = false)
+    private String orderItem;
+
+    @Column(nullable = false)
     private String accountId;
 
     @Column(nullable = false)
@@ -51,6 +54,12 @@ public class PaymentEvent {
         this.paymentEventType = paymentEventType;
     }
 
+    public String getOrderItem() {
+        return orderItem;
+    }
 
+    public void setOrderItem(String orderItem) {
+        this.orderItem = orderItem;
+    }
 
 }

@@ -11,9 +11,11 @@ import org.apache.kafka.connect.transforms.Transformation;
 import java.util.Map;
 
 
-public class EventRouter<R extends ConnectRecord<R>> implements Transformation<R> {
+public class TicketEventRouter<R extends ConnectRecord<R>> implements Transformation<R> {
 
-    public EventRouter() { }
+    private static final String TOPIC = "tickets";
+
+    public TicketEventRouter() { }
 
     @Override
     public void configure(Map<String, ?> configs) { }
@@ -32,8 +34,10 @@ public class EventRouter<R extends ConnectRecord<R>> implements Transformation<R
         else if (op.equals("c")) {
             Struct after = struct.getStruct("after");
 
+            //order id
             String key = after.getString("correlationid");
-            String ticketeventtype = after.getString("ticketeventtype");
+
+            String itemeventtype = after.getString("itemeventtype");
             Long ticketid = after.getInt64("ticketid");
             String accountid = after.getString("accountid");
             Long createdon = after.getInt64("createdon");
@@ -45,25 +49,24 @@ public class EventRouter<R extends ConnectRecord<R>> implements Transformation<R
             } catch (Exception ex) {}
 
             Schema valueSchema = SchemaBuilder.struct()
-                .field("ticketeventtype", after.schema().field("ticketeventtype").schema())
+                .field("itemeventtype", after.schema().field("itemeventtype").schema())
                 .field("createdon", after.schema().field("createdon").schema())
-                .field("ticketid", after.schema().field("ticketid").schema())
+                .field("itemid", after.schema().field("itemid").schema())
                 .field("accountid", after.schema().field("accountid").schema())
                 .field("totalcost", after.schema().field("totalcost").schema())
                 .build();
 
             Struct value = new Struct(valueSchema)
-                .put("ticketeventtype", ticketeventtype)
+                .put("itemeventtype", itemeventtype)
                 .put("createdon", createdon)
-                .put("ticketid", ticketid)
+                .put("itemid", ticketid)
                 .put("accountid", accountid)
                 .put("totalcost", totalcost);
 
             Headers headers = record.headers();
             headers.addString("correlationid", key);
 
-            //TODO get topic name from event
-            return record.newRecord("tickets", null, Schema.STRING_SCHEMA, key, valueSchema, value,
+            return record.newRecord(TOPIC, null, Schema.STRING_SCHEMA, key, valueSchema, value,
                     record.timestamp(), headers);
         }
         else {

@@ -47,8 +47,8 @@ public class TicketService {
         ticketEvent.setCorrelationId(ticket.getOrderId());
         ticketEvent.setAccountId(ticket.getAccountId());
         ticketEvent.setCreatedOn(Instant.now());
-        ticketEvent.setTicketId(ticket.getId());
-        ticketEvent.setTicketEventType(TicketEventType.TICKET_CREATED);
+        ticketEvent.setItemId(ticket.getId());
+        ticketEvent.setItemEventType(TicketEventType.TICKET_CREATED);
 
         entityManager.persist(ticketEvent);
         entityManager.flush();

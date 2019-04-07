@@ -27,7 +27,7 @@ public class PaymentService {
         entityManager.flush();
 
         PaymentEvent paymentEvent = new PaymentEvent();
-        paymentEvent.setCorrelationId(payment.getOrderId());
+        paymentEvent.setCorrelationId(payment.getOrder().getId());
         paymentEvent.setAccountId(String.valueOf(payment.getAccount().getId()));
         paymentEvent.setCreatedOn(Instant.now());
         paymentEvent.setPaymentEventType(PaymentEventType.valueOf(payment.getState().name()));
@@ -35,6 +35,7 @@ public class PaymentService {
         entityManager.persist(paymentEvent);
         entityManager.flush();
     }
+
 
     public Payment findPaymentByOrderId(String orderId) {
         Payment payment = null;
@@ -46,4 +47,5 @@ public class PaymentService {
         catch (NoResultException nre){ }
         return payment;
     }
+
 }

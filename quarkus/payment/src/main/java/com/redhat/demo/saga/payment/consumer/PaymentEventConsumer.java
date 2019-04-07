@@ -2,11 +2,9 @@ package com.redhat.demo.saga.payment.consumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.demo.saga.payment.event.ProcessedEvent;
+import com.redhat.demo.saga.payment.event.OrderEventType;
 import com.redhat.demo.saga.payment.event.TicketEventType;
-import com.redhat.demo.saga.payment.model.Account;
-import com.redhat.demo.saga.payment.model.Payment;
-import com.redhat.demo.saga.payment.model.PaymentState;
+import com.redhat.demo.saga.payment.model.*;
 import com.redhat.demo.saga.payment.service.AccountService;
 import com.redhat.demo.saga.payment.service.EventService;
 import com.redhat.demo.saga.payment.service.PaymentService;
@@ -19,7 +17,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
@@ -43,51 +41,81 @@ public class PaymentEventConsumer {
     @Transactional
     public CompletionStage<Void> onMessage(KafkaMessage<String, String> message) throws IOException {
         try {
+            JsonNode json = objectMapper.readTree(message.getPayload());
             final Optional<String> orderId = message.getHeaders().getOneAsString("correlationid");
+            String itemId = json.get("itemid").asText();
+            String accountId = json.get("accountid").asText();
+            String itemEventType = json.get("ticketeventtype").asText();
+            Double itemCost = json.get("totalcost").asDouble();
+
+
             if (orderId.isPresent()) {
-                if(eventService.isEventProcessed(orderId.get())) {
-                    LOGGER.error("A payment event with same order id {} already processed, discard!", orderId.get());
+                //verify if item is already processed
+                if(eventService.isEventProcessed(orderId.get(), itemId, itemEventType)) {
+                    LOGGER.error("An event with same order id {}, item id {}, itemEventType {} already processed, discard!", orderId.get(), itemId, itemEventType);
                     return null;
                 }
 
-                //create ProcessedEvent
-                ProcessedEvent processedEvent = new ProcessedEvent();
-                processedEvent.setCorrelationId(orderId.get());
-                processedEvent.setReceivedOn(Instant.now());
-                eventService.processEvent(processedEvent);
-
                 //verify there is already a orderId for payment
                 Payment payment = paymentService.findPaymentByOrderId(orderId.get());
+                //get Account
+                Account account = accountService.findById(accountId);
 
-                if(payment != null) {
-                    //TODO send payment refused event
-                } else {
-                    JsonNode json = objectMapper.readTree(message.getPayload());
-                    String accountId = json.get("accountid").asText();
-                    String ticketEventType = json.get("ticketeventtype").asText();
-                    Double ticketCost = json.get("totalcost").asDouble();
-                    //verify account funds
-                    if(ticketEventType == TicketEventType.TICKET_CREATED.name()) {
-                        Account account = accountService.findById(accountId);
-                        if(account != null) {
-                           Double currentFunds = account.getFunds();
-                           if(currentFunds > ticketCost) {
-                               //create payment
-                               payment = new Payment();
-                               payment.setAccount(account);
-                               payment.setOrderId(orderId.get());
-                               payment.setState(PaymentState.PAYMENT_ACCEPTED);
-                           }
-                           else {
-                               payment = new Payment();
-                               payment.setAccount(account);
-                               payment.setOrderId(orderId.get());
-                               payment.setState(PaymentState.PAYMENT_REFUSED);
-                           }
-                           paymentService.createPayment(payment);
+                //verify item
+                if(itemEventType == TicketEventType.TICKET_CREATED.name()) {
+                    if(payment != null && payment.getOrder().getOrderItems().contains(new OrderItem(itemId))) {
+                        LOGGER.error("A payment with same order id {} and item id {} already processed, discard!", orderId.get(), itemId);
+                        return null;
+                    }
+
+                    boolean newPayment = false;
+
+                    if(payment == null) {
+                        newPayment = true;
+                        payment = new Payment();
+                        payment.setAccount(account);
+                        payment.setState(PaymentState.PAYMENT_INPROGRESS);
+                        Order order = new Order();
+                        order.setId(orderId.get());
+                        order.setPayment(payment);
+                    }
+
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setId(itemId);
+                    orderItem.setCost(itemCost);
+                    orderItem.setOrder(payment.getOrder());
+                    payment.getOrder().getOrderItems().add(orderItem);
+
+                    if(newPayment)
+                        paymentService.createPayment(payment);
+
+                    eventService.processEvent(orderId.get(), orderItem.getId(),TicketEventType.TICKET_CREATED.name());
+
+                } else if(itemEventType == OrderEventType.ORDER_COMPLETED.name()) {
+                    if (payment == null) {
+                        LOGGER.error("No payment for order id {}!", orderId.get());
+                        return null;
+                    }
+                    //check order item in order event
+                    List<String> itemIds = json.findValuesAsText("itemsIds");
+                    for(String tmp: itemIds) {
+                        if (!payment.getOrder().getOrderItems().contains(new OrderItem(tmp))) {
+                            LOGGER.error("A payment order id {} doesn't not contain all the items required!", orderId.get());
+                            return null;
                         }
                     }
+                    //verify account funds
+                    Double orderCost = 0.0;
+                    for(OrderItem orderItem: payment.getOrder().getOrderItems())
+                        orderCost+= orderItem.getCost();
+                    if(account.getFunds() < orderCost)
+                        payment.setState(PaymentState.PAYMENT_REFUSED);
+                    else
+                        payment.setState(PaymentState.PAYMENT_ACCEPTED);
+
+                    eventService.processEvent(orderId.get(), null, OrderEventType.ORDER_COMPLETED.name());
                 }
+
             }
 
 

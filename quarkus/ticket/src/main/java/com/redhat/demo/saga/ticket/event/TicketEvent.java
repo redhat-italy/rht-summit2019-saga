@@ -11,14 +11,14 @@ public class TicketEvent {
     private String correlationId;
 
     @Column(nullable = false)
-    private Long ticketId;
+    private Long itemId;
 
     @Column(nullable = false)
     private String accountId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TicketEventType ticketEventType;
+    private TicketEventType itemEventType;
 
     @Column(nullable = false)
     private Double totalCost;
@@ -33,20 +33,20 @@ public class TicketEvent {
         this.correlationId = correlationId;
     }
 
-    public Long getTicketId() {
-        return ticketId;
+    public Long getItemId() {
+        return itemId;
     }
 
-    public void setTicketId(Long ticketId) {
-        this.ticketId = ticketId;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
-    public TicketEventType getTicketEventType() {
-        return ticketEventType;
+    public TicketEventType getItemEventType() {
+        return itemEventType;
     }
 
-    public void setTicketEventType(TicketEventType ticketEventType) {
-        this.ticketEventType = ticketEventType;
+    public void setItemEventType(TicketEventType itemEventType) {
+        this.itemEventType = itemEventType;
     }
 
     public Instant getCreatedOn() {

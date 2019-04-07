@@ -13,6 +13,6 @@
     "table.whitelist" : "public.ticketevent",
     "tombstones.on.delete" : "false",
     "transforms" : "router",
-    "transforms.router.type" : "com.redhat.demo.saga.connect.EventRouter"
+    "transforms.router.type" : "com.redhat.demo.saga.connect.TicketEventRouter"
   }
 }

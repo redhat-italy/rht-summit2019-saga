@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity(name = "Payment")
 @Table(name = "payment")
 @NamedQuery(name = "Payment.findByOrder",
-        query = "SELECT p FROM Payment p where p.orderId = :orderId")
+        query = "SELECT p FROM Payment p where p.order.id = :orderId")
 public class Payment {
 
     @Id
@@ -13,8 +13,8 @@ public class Payment {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String orderId;
+    @OneToOne(mappedBy = "order")
+    private Order order;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -32,12 +32,12 @@ public class Payment {
         this.id = id;
     }
 
-    public String getOrderId() {
-        return orderId;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public Account getAccount() {
