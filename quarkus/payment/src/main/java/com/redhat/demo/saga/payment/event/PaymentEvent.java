@@ -6,21 +6,31 @@ import java.time.Instant;
 @Entity
 public class PaymentEvent {
 
-    //orderId is the correlationId
     @Id
-    private String correlationId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
 
+    //orderId is the correlationId
     @Column(nullable = false)
-    private String orderItem;
+    private String correlationId;
 
     @Column(nullable = false)
     private String accountId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PaymentEventType paymentEventType;
+    private PaymentEventType itemeventtype;
 
     private Instant createdOn;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getCorrelationId() {
         return correlationId;
@@ -46,20 +56,13 @@ public class PaymentEvent {
         this.accountId = accountId;
     }
 
-    public PaymentEventType getPaymentEventType() {
-        return paymentEventType;
+    public PaymentEventType getItemeventtype() {
+        return itemeventtype;
     }
 
-    public void setPaymentEventType(PaymentEventType paymentEventType) {
-        this.paymentEventType = paymentEventType;
+    public void setItemeventtype(PaymentEventType itemeventtype) {
+        this.itemeventtype = itemeventtype;
     }
 
-    public String getOrderItem() {
-        return orderItem;
-    }
-
-    public void setOrderItem(String orderItem) {
-        this.orderItem = orderItem;
-    }
 
 }

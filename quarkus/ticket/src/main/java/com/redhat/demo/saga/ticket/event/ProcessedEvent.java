@@ -1,14 +1,30 @@
 package com.redhat.demo.saga.ticket.event;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
+@NamedQuery(name = "ProcessedEvent.findByCorrelationId",
+        query = "SELECT p FROM ProcessedEvent p where p.correlationId = :correlationId")
 public class ProcessedEvent {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+
+    @Id
     private String correlationId;
+
+    private String eventType;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Instant getReceivedOn() {
         return receivedOn;
@@ -27,6 +43,15 @@ public class ProcessedEvent {
     public void setCorrelationId(String correlationId) {
         this.correlationId = correlationId;
     }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
 
 
 }

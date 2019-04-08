@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 @ApplicationScoped
@@ -27,7 +28,17 @@ public class EventService {
     }
 
     @Transactional
-    public boolean isEventProcessed(String correlationId) {
-        return entityManager.find(ProcessedEvent.class, correlationId) != null;
+    public boolean isEventProcessed(String orderId) {
+        ProcessedEvent processedEvent = null;
+        try {
+
+            processedEvent = (ProcessedEvent) entityManager.createNamedQuery("ProcessedEvent.findByCorrelationId")
+                    .setParameter("correlationId", orderId)
+                    .getSingleResult();
+
+        } catch (NoResultException nre) {
+            return false;
+        }
+        return processedEvent != null;
     }
 }

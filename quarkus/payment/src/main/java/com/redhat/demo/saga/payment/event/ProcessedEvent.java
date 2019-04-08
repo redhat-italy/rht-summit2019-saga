@@ -1,8 +1,6 @@
 package com.redhat.demo.saga.payment.event;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
@@ -13,6 +11,11 @@ import java.time.Instant;
 public class ProcessedEvent {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+
+    @Column(nullable = false)
     private String correlationId;
 
     private String itemId;
@@ -20,6 +23,14 @@ public class ProcessedEvent {
     private String eventType;
 
     private Instant receivedOn;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getEventType() {
         return eventType;

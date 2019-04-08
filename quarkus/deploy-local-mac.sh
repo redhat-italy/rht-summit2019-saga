@@ -67,6 +67,11 @@ cat ticket/tickets.json
 echo -e "\nResponse:"
 curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8080/tickets -d @ticket/tickets.json
 
+########################### Payment Application
+echo -e "\nStart Payment Application container..."
+docker run -d --name ticket -p 8090:8080 --link postgres:postgres --link zookeeper:zookeeper --link kafka:kafka hifly81/quarkus-payment-service
+echo -e "\Payment Application started."
+
 ########################### Verify Environment
 sleep 5
 echo -e "\n\nVerify TicketEvent Table..."

@@ -1,5 +1,7 @@
 package com.redhat.demo.saga.ticket.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.redhat.demo.saga.ticket.event.PaymentEventType;
 import com.redhat.demo.saga.ticket.event.ProcessedEvent;
 import com.redhat.demo.saga.ticket.event.TicketEvent;
 import com.redhat.demo.saga.ticket.event.TicketEventType;
@@ -68,45 +70,48 @@ public class TicketService {
         return ticket;
     }
 
+    public Ticket findTicketsByOrderIdAndState(String orderId, TicketState ticketState) {
+        Ticket ticket = null;
+        try {
+            ticket = (Ticket) entityManager.createNamedQuery("Ticket.findByOrderIdAndState")
+                    .setParameter("orderId", orderId)
+                    .setParameter("state", ticketState)
+                    .getSingleResult();
+        }
+        catch (NoResultException nre){ }
+        return ticket;
+    }
+
     @Transactional
-    public void onPaymentCreated(String correlationId) {
+    public void onPaymentReceived(String correlationId, JsonNode json) {
+
+        String accountId = json.get("accountid").asText();
+        String itemEventType = json.get("itemeventtype").asText();
 
         if(eventService.isEventProcessed(correlationId)) {
-            LOGGER.error("A payment event with same id {} already processed, discard!", correlationId);
+            LOGGER.error("A payment event with same orderId {} already processed, discard!", correlationId);
             return;
+        }
+
+        //find ticket
+        Ticket ticket = findTicketsByOrderIdAndState(correlationId, TicketState.TICKET_BOOKED_PENDING);
+        if(ticket != null) {
+            //verify item
+            if(itemEventType == PaymentEventType.PAYMENT_ACCEPTED.name()) {
+                ticket.setState(TicketState.TICKET_BOOKED);
+
+            } else if(itemEventType == PaymentEventType.PAYMENT_REFUSED.name()) {
+                ticket.setState(TicketState.TICKET_PAYMENT_REFUSED);
+            }
         }
 
         //create ProcessedEvent
         ProcessedEvent processedEvent = new ProcessedEvent();
         processedEvent.setCorrelationId(correlationId);
         processedEvent.setReceivedOn(Instant.now());
+        processedEvent.setEventType(itemEventType);
         eventService.processEvent(processedEvent);
-
-        //TODO
-        //process payment event
-
-        //persist message log
 
     }
 
-    @Transactional
-    public void onPaymentRefused(String correlationId) {
-
-        if(eventService.isEventProcessed(correlationId)) {
-            LOGGER.error("A payment event with same id {} already processed, discard!", correlationId);
-            return;
-        }
-
-        //create ProcessedEvent
-        ProcessedEvent processedEvent = new ProcessedEvent();
-        processedEvent.setCorrelationId(correlationId);
-        processedEvent.setReceivedOn(Instant.now());
-        eventService.processEvent(processedEvent);
-
-        //TODO
-        //process payment event
-
-        //persist message log
-
-    }
 }

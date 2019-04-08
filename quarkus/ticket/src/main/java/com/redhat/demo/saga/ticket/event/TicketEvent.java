@@ -6,8 +6,13 @@ import java.time.Instant;
 @Entity
 public class TicketEvent {
 
-    //orderId is the correlationId
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+
+    //orderId is the correlationId
+    @Column(nullable = false)
     private String correlationId;
 
     @Column(nullable = false)
@@ -24,6 +29,14 @@ public class TicketEvent {
     private Double totalCost;
 
     private Instant createdOn;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getCorrelationId() {
         return correlationId;
@@ -64,7 +77,6 @@ public class TicketEvent {
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
-
 
     public Double getTotalCost() {
         return totalCost;

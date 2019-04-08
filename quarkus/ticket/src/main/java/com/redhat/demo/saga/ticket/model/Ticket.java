@@ -4,7 +4,9 @@ import javax.persistence.*;
 
 @Entity
 @NamedQuery(name = "Ticket.findByAccountAndState",
-        query = "SELECT t FROM Ticket t where t.accountId = :accountId and state = :state")
+        query = "SELECT t FROM Ticket t where t.accountId = :accountId and t.state = :state")
+@NamedQuery(name = "Ticket.findByOrderIdAndState",
+        query = "SELECT t FROM Ticket t where t.orderId = :orderId and t.state = :state")
 public class Ticket {
 
     @Id
@@ -12,7 +14,7 @@ public class Ticket {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String orderId;
 
     @Column(nullable = false)
