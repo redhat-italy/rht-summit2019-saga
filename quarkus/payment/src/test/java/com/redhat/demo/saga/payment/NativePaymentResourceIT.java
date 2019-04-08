@@ -1,6 +1,5 @@
 package com.redhat.demo.saga.payment;
 
-import com.redhat.demo.saga.ticket.PaymentResourceTest;
 import io.quarkus.test.junit.SubstrateTest;
 
 @SubstrateTest

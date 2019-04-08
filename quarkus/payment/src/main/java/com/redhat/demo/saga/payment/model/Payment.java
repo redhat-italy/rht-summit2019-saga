@@ -13,15 +13,14 @@ public class Payment {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @OneToOne(mappedBy = "order")
+    @OneToOne
     private Order order;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PaymentState state;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @ManyToOne
     private Account account;
 
     public Long getId() {

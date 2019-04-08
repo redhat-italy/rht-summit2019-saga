@@ -11,15 +11,10 @@ public class Order {
     @Id
     private String id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_id", referencedColumnName = "id")
+    @OneToOne
     private Payment payment;
 
-    @OneToMany(
-            mappedBy = "orderitem",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany
     private List<OrderItem> orderItems = new ArrayList<>();
 
     public String getId() {

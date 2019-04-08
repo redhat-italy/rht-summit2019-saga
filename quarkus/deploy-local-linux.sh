@@ -11,11 +11,13 @@ docker stop $(docker ps -a | grep debezium/kafka | cut -d ' ' -f 1)
 docker stop $(docker ps -a | grep debezium/zookeeper | cut -d ' ' -f 1)
 docker stop $(docker ps -a | grep debezium/postgres | cut -d ' ' -f 1)
 docker stop $(docker ps -a | grep hifly81/quarkus-ticket-service | cut -d ' ' -f 1)
+docker stop $(docker ps -a | grep hifly81/quarkus-payment-service | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep hifly81/debezium-connect | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep debezium/kafka | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep debezium/zookeeper | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep debezium/postgres | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep hifly81/quarkus-ticket-service | cut -d ' ' -f 1)
+docker rm $(docker ps -a | grep hifly81/quarkus-payment-service | cut -d ' ' -f 1)
 
 
 echo -e "\nPruning done. Starting application..."
@@ -70,7 +72,7 @@ curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" loc
 
 ########################### Payment Application
 echo -e "\nStart Payment Application container..."
-docker run -d --name ticket -p 8090:8080 --link postgres:postgres --link zookeeper:zookeeper --link kafka:kafka hifly81/quarkus-payment-service
+docker run -d --name payment -p 8090:8080 --link postgres:postgres --link zookeeper:zookeeper --link kafka:kafka hifly81/quarkus-payment-service
 echo -e "\Payment Application started."
 
 ########################### Verify Environment

@@ -38,7 +38,7 @@ public class TicketEventRouter<R extends ConnectRecord<R>> implements Transforma
             String key = after.getString("correlationid");
 
             String itemeventtype = after.getString("itemeventtype");
-            Long ticketid = after.getInt64("ticketid");
+            Long ticketid = after.getInt64("itemid");
             String accountid = after.getString("accountid");
             Long createdon = after.getInt64("createdon");
 

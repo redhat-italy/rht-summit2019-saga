@@ -12,8 +12,7 @@ public class OrderItem {
 
     private Double cost;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @ManyToOne
     private Order order;
 
     public String getId() {

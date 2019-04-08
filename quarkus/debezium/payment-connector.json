@@ -1,5 +1,5 @@
 {
-  "name": "ticket-connector",
+  "name": "payment-connector",
   "config": {
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
     "tasks.max": "1",

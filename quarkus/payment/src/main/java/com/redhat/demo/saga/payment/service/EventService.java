@@ -1,6 +1,5 @@
 package com.redhat.demo.saga.payment.service;
 
-import com.redhat.demo.saga.payment.event.PaymentEvent;
 import com.redhat.demo.saga.payment.event.ProcessedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +18,6 @@ public class EventService {
 
     @Inject
     EntityManager entityManager;
-
-    @Inject
-    PaymentService paymentService;
 
     @Transactional
     public ProcessedEvent processEvent(String orderId, String itemId, String eventType) {

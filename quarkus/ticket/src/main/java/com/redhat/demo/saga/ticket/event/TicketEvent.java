@@ -1,10 +1,11 @@
 package com.redhat.demo.saga.ticket.event;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-public class TicketEvent {
+public class TicketEvent implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

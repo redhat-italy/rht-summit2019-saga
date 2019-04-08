@@ -13,11 +13,7 @@ public class Account {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @OneToMany(
-            mappedBy = "payment",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany
     private List<Payment> payments = new ArrayList<>();
 
     private Double funds;

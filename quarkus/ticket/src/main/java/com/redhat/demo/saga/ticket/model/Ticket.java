@@ -1,13 +1,14 @@
 package com.redhat.demo.saga.ticket.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @NamedQuery(name = "Ticket.findByAccountAndState",
         query = "SELECT t FROM Ticket t where t.accountId = :accountId and t.state = :state")
 @NamedQuery(name = "Ticket.findByOrderIdAndState",
         query = "SELECT t FROM Ticket t where t.orderId = :orderId and t.state = :state")
-public class Ticket {
+public class Ticket implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

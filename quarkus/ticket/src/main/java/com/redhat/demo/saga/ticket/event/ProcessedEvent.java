@@ -1,12 +1,13 @@
 package com.redhat.demo.saga.ticket.event;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
 @NamedQuery(name = "ProcessedEvent.findByCorrelationId",
         query = "SELECT p FROM ProcessedEvent p where p.correlationId = :correlationId")
-public class ProcessedEvent {
+public class ProcessedEvent implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

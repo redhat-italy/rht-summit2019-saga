@@ -50,6 +50,7 @@ public class TicketService {
         ticketEvent.setAccountId(ticket.getAccountId());
         ticketEvent.setCreatedOn(Instant.now());
         ticketEvent.setItemId(ticket.getId());
+        ticketEvent.setTotalCost(ticket.getTotalCost());
         ticketEvent.setItemEventType(TicketEventType.TICKET_CREATED);
 
         entityManager.persist(ticketEvent);
