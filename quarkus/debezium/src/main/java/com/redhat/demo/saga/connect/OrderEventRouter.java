@@ -11,11 +11,11 @@ import org.apache.kafka.connect.transforms.Transformation;
 import java.util.Map;
 
 
-public class TicketEventRouter<R extends ConnectRecord<R>> implements Transformation<R> {
+public class OrderEventRouter<R extends ConnectRecord<R>> implements Transformation<R> {
 
-    private static final String TOPIC = "tickets";
+    private static final String TOPIC = "orders";
 
-    public TicketEventRouter() { }
+    public OrderEventRouter() { }
 
     @Override
     public void configure(Map<String, ?> configs) { }
@@ -38,34 +38,27 @@ public class TicketEventRouter<R extends ConnectRecord<R>> implements Transforma
             String key = after.getString("correlationid");
 
             String itemeventtype = after.getString("itemeventtype");
-            Long ticketid = after.getInt64("itemid");
             String accountid = after.getString("accountid");
             Long createdon = after.getInt64("createdon");
 
             //Optional fields
             Double totalcost = 0.0;
-            Boolean insurancerequired = false;
             try {
                 totalcost = after.getFloat64("totalcost");
-                insurancerequired = after.getBoolean("insurancerequired");
             } catch (Exception ex) {}
 
             Schema valueSchema = SchemaBuilder.struct()
                 .field("itemeventtype", after.schema().field("itemeventtype").schema())
                 .field("createdon", after.schema().field("createdon").schema())
-                .field("itemid", after.schema().field("itemid").schema())
                 .field("accountid", after.schema().field("accountid").schema())
                 .field("totalcost", after.schema().field("totalcost").schema())
-                .field("insurancerequired", after.schema().field("insurancerequired").schema())
                 .build();
 
             Struct value = new Struct(valueSchema)
                 .put("itemeventtype", itemeventtype)
                 .put("createdon", createdon)
-                .put("itemid", ticketid)
                 .put("accountid", accountid)
-                .put("totalcost", totalcost)
-                .put("insurancerequired", insurancerequired);
+                .put("totalcost", totalcost);
 
             Headers headers = record.headers();
             headers.addString("correlationid", key);

@@ -14,13 +14,12 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 @ApplicationScoped
-public class TicketEventConsumer {
+public class PaymentsEventConsumer {
 
     @Inject
     TicketService ticketService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-
 
     @Incoming("payments")
     public CompletionStage<Void> onMessage(KafkaMessage<String, String> message) throws IOException {

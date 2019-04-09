@@ -1,13 +1,13 @@
-package com.redhat.demo.saga.ticket.event;
+package com.redhat.demo.saga.insurance.event;
 
-import com.redhat.demo.saga.ticket.constant.TicketEventType;
+import com.redhat.demo.saga.insurance.constant.InsuranceEventType;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-public class TicketEvent implements Serializable {
+public class InsuranceEvent implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +26,10 @@ public class TicketEvent implements Serializable {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TicketEventType itemEventType;
+    private InsuranceEventType itemEventType;
 
     @Column(nullable = false)
     private Double totalCost;
-
-    private Boolean insuranceRequired;
 
     private Instant createdOn;
 
@@ -59,11 +57,11 @@ public class TicketEvent implements Serializable {
         this.itemId = itemId;
     }
 
-    public TicketEventType getItemEventType() {
+    public InsuranceEventType getItemEventType() {
         return itemEventType;
     }
 
-    public void setItemEventType(TicketEventType itemEventType) {
+    public void setItemEventType(InsuranceEventType itemEventType) {
         this.itemEventType = itemEventType;
     }
 
@@ -90,13 +88,4 @@ public class TicketEvent implements Serializable {
     public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
-
-    public Boolean getInsuranceRequired() {
-        return insuranceRequired;
-    }
-
-    public void setInsuranceRequired(Boolean insuranceRequired) {
-        this.insuranceRequired = insuranceRequired;
-    }
-
 }

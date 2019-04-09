@@ -1,4 +1,4 @@
-package com.redhat.demo.saga.ticket.event;
+package com.redhat.demo.saga.insurance.constant;
 
 public enum TicketEventType {
 

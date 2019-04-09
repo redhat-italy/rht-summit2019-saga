@@ -1,4 +1,4 @@
-package com.redhat.demo.saga.payment.event;
+package com.redhat.demo.saga.payment.constant;
 
 public enum OrderEventType {
 

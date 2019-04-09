@@ -3,6 +3,9 @@
 image_ticket_name=ticket
 image_ticket_version=latest
 
+image_insurance_name=insurance
+image_insurance_version=latest
+
 image_payment_name=payment
 image_payment_version=latest
 
@@ -13,14 +16,21 @@ image_debezium_version=latest
 
 #create image
 cd ticket/
-mvn package -Pnative -Dnative-image.docker-build=true
+mvn clean package -Pnative -Dnative-image.docker-build=true
 docker build -f Dockerfile.native -t ${image_ticket_name}:${image_ticket_version} .
+
+############################ Insurance Service
+
+#create image
+cd insurance/
+mvn clean package -Pnative -Dnative-image.docker-build=true
+docker build -f Dockerfile.native -t ${image_insurance_name}:${image_insurance_version} .
 
 ############################ Payment Service
 
 #create image
 cd payment/
-mvn package -Pnative -Dnative-image.docker-build=true
+mvn clean package -Pnative -Dnative-image.docker-build=true
 docker build -f Dockerfile.native -t ${image_payment_name}:${image_payment_version} .
 
 ############################ Debezium Connect Service

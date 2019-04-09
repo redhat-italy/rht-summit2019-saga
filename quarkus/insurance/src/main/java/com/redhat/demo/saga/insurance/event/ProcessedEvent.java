@@ -1,4 +1,4 @@
-package com.redhat.demo.saga.payment.event;
+package com.redhat.demo.saga.insurance.event;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -51,5 +51,4 @@ public class ProcessedEvent {
     public void setCorrelationId(String correlationId) {
         this.correlationId = correlationId;
     }
-
 }

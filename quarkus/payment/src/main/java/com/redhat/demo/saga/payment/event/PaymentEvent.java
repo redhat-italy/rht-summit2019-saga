@@ -1,5 +1,7 @@
 package com.redhat.demo.saga.payment.event;
 
+import com.redhat.demo.saga.payment.constant.PaymentEventType;
+
 import javax.persistence.*;
 import java.time.Instant;
 

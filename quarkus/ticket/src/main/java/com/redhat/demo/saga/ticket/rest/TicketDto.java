@@ -20,6 +20,8 @@ public class TicketDto {
 
     private Double totalCost;
 
+    private boolean insuranceRequired;
+
     private String messageOnTicket;
 
     private String messageSeverityTicket;
@@ -94,5 +96,13 @@ public class TicketDto {
 
     public void setMessageSeverityTicket(String messageSeverityTicket) {
         this.messageSeverityTicket = messageSeverityTicket;
+    }
+
+    public boolean isInsuranceRequired() {
+        return insuranceRequired;
+    }
+
+    public void setInsuranceRequired(boolean insuranceRequired) {
+        this.insuranceRequired = insuranceRequired;
     }
 }

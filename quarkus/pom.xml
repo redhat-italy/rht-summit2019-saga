@@ -20,7 +20,7 @@
     <modules>
         <module>debezium</module>
         <module>ticket</module>
-        <!--<module>insurance</module>-->
+        <module>insurance</module>
         <module>payment</module>
     </modules>
 

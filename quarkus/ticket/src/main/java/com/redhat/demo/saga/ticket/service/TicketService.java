@@ -1,10 +1,10 @@
 package com.redhat.demo.saga.ticket.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.redhat.demo.saga.ticket.event.PaymentEventType;
+import com.redhat.demo.saga.ticket.constant.PaymentEventType;
 import com.redhat.demo.saga.ticket.event.ProcessedEvent;
 import com.redhat.demo.saga.ticket.event.TicketEvent;
-import com.redhat.demo.saga.ticket.event.TicketEventType;
+import com.redhat.demo.saga.ticket.constant.TicketEventType;
 import com.redhat.demo.saga.ticket.model.Ticket;
 
 import javax.enterprise.context.ApplicationScoped;
