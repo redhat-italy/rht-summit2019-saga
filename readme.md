@@ -3,6 +3,15 @@ Saga microservices Playground
 
 ## Saga Choreography with Quarkus
 
+### Create Native Image
+
+Launch the script to create the native images:
+
+```bash
+cd quarkus/
+./build-image.sh
+```
+
 ### Launch on local env - linux and mac
 
 Launch the bootstrap script to create the docker containers.<br>
@@ -28,15 +37,19 @@ cd quarkus/
 
 1 insurance will be created (payload in file insurance/insurances.json).
 
+This is the final state inside the microservices databases at the end of the 2 sagas:
 
-### Create Native Image
+![ScreenShot 1](images/ticketevent.png)
 
-Launch the script to create the native images:
+![ScreenShot 2](images/orderevent.png)
 
-```bash
-cd quarkus/
-./build-image.sh
-```
+![ScreenShot 3](images/paymentevent.png)
+
+![ScreenShot 4](images/tickettable.png)
+
+![ScreenShot 5](images/insurancetable.png)
+
+![ScreenShot 6](images/accounttable.png)
 
 ### Deploy on OpenShift
 
