@@ -21,6 +21,7 @@ Containers:
 cd quarkus/
 ./deploy-docker.sh
 ./test-saga.sh
+./test-saga-failed.sh
 ```
 
 1 ticket will be created (payload in file ticket/tickets.json).

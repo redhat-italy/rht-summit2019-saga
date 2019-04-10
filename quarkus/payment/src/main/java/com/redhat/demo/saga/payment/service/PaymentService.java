@@ -85,8 +85,14 @@ public class PaymentService {
             payment.setOrderCost(itemCost);
             if(itemCost > account.getFunds())
                 payment.setState(PaymentState.PAYMENT_REFUSED);
-            else
+            else {
                 payment.setState(PaymentState.PAYMENT_ACCEPTED);
+                //update account
+                account.setFunds(account.getFunds() - itemCost);
+
+                entityManager.merge(account);
+                entityManager.flush();
+            }
 
             createPayment(payment);
             createPaymentEvent(payment);

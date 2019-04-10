@@ -11,7 +11,7 @@
 ########################### Test Saga
 echo -e "\nAdd 1 ticket..."
 echo -e "\nResponse:"
-response=$(curl -s -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8080/tickets -d @ticket/tickets.json)
+response=$(curl -s -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8080/tickets -d @ticket/tickets-test2.json)
 echo $response
 echo -e "\nExtract ticketId..."
 ticketId=$(echo $response | jq '.id')
@@ -25,7 +25,7 @@ sed -i -e "s/ticketplaceholder/$ticketId/g" insurance/insurances.json
 cat insurance/insurances.json
 sleep 5
 echo -e "\nResponse:"
-curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8090/insurances -d @insurance/insurances.json
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8090/insurances -d @insurance/insurances-test2.json
 sleep 5
 echo -e "\n\nVerify Insurance Table..."
 docker exec -it postgres psql -h localhost -p 5432 -U postgres -d insurances -c 'select * from insurance;'
