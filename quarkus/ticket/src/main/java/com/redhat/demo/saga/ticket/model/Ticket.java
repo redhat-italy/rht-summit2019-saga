@@ -31,7 +31,7 @@ public class Ticket implements Serializable {
 
     private Double totalCost;
 
-    private Boolean insuranceRequired;
+    private String insuranceRequired;
 
     @Transient
     private String messageOnTicket;
@@ -112,11 +112,11 @@ public class Ticket implements Serializable {
         this.messageSeverityTicket = messageSeverityTicket;
     }
 
-    public Boolean getInsuranceRequired() {
+    public String getInsuranceRequired() {
         return insuranceRequired;
     }
 
-    public void setInsuranceRequired(Boolean insuranceRequired) {
+    public void setInsuranceRequired(String insuranceRequired) {
         this.insuranceRequired = insuranceRequired;
     }
 }

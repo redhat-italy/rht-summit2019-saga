@@ -60,7 +60,7 @@ public class TicketResource {
         ticket.setNumberOfPersons(ticketDto.getNumberOfPersons());
         ticket.setOrderId(ticketDto.getOrderId());
         ticket.setTotalCost(ticketDto.getTotalCost());
-        ticket.setInsuranceRequired(ticketDto.isInsuranceRequired());
+        ticket.setInsuranceRequired(ticketDto.getInsuranceRequired());
         return ticket;
     }
 

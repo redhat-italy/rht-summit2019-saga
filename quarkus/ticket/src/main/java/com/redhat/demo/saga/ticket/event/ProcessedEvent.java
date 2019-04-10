@@ -14,7 +14,7 @@ public class ProcessedEvent implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Id
+    @Column(nullable = false)
     private String correlationId;
 
     private String eventType;

@@ -18,6 +18,9 @@ public class Insurance {
     private String orderId;
 
     @Column(nullable = false)
+    private Long ticketId;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private InsuranceState state;
 
@@ -26,7 +29,15 @@ public class Insurance {
 
     private String name;
 
-    private Double totalCost;
+    private Double ticketCost;
+
+    private Double insuranceCost;
+
+    @Transient
+    private String messageOnTicket;
+
+    @Transient
+    private String messageSeverityTicket;
 
     public Long getId() {
         return id;
@@ -48,14 +59,6 @@ public class Insurance {
         return name;
     }
 
-    public Double getTotalCost() {
-        return totalCost;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
@@ -72,7 +75,48 @@ public class Insurance {
         this.name = name;
     }
 
-    public void setTotalCost(Double totalCost) {
-        this.totalCost = totalCost;
+
+    public Long getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(Long ticketId) {
+        this.ticketId = ticketId;
+    }
+
+    public String getMessageOnTicket() {
+        return messageOnTicket;
+    }
+
+    public void setMessageOnTicket(String messageOnTicket) {
+        this.messageOnTicket = messageOnTicket;
+    }
+
+    public String getMessageSeverityTicket() {
+        return messageSeverityTicket;
+    }
+
+    public void setMessageSeverityTicket(String messageSeverityTicket) {
+        this.messageSeverityTicket = messageSeverityTicket;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getTicketCost() {
+        return ticketCost;
+    }
+
+    public void setTicketCost(Double ticketCost) {
+        this.ticketCost = ticketCost;
+    }
+
+    public Double getInsuranceCost() {
+        return insuranceCost;
+    }
+
+    public void setInsuranceCost(Double insuranceCost) {
+        this.insuranceCost = insuranceCost;
     }
 }

@@ -1,4 +1,12 @@
 #!/bin/bash
+#title           :deploy-docker.sh
+#description     :This script will create the SAGA Choreography env with docker containers.
+#author		     :hifly81
+#date            :20190410
+#version         :0.1
+#usage		     :bash deploy-docker.sh
+#notes           :requires: docker, curl
+#==============================================================================
 
 DOCKER_HOST=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
 printf "\nDocker host: ${DOCKER_HOST}"
@@ -55,7 +63,7 @@ echo -e "\nKafka started."
 sleep 5
 echo -e "\nStart Debezium Kafka connect container...."
 docker run -d --name connect -p 8083:8083 -e BOOTSTRAP_SERVERS=kafka:9092 -e GROUP_ID=1 -e CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE=false -e CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE=false -e CONFIG_STORAGE_TOPIC=my-connect-configs -e OFFSET_STORAGE_TOPIC=my-connect-offsets -e ADVERTISED_HOST_NAME=${DOCKER_HOST} --link zookeeper:zookeeper --link postgres:postgres --link kafka:kafka hifly81/debezium-connect
-sleep 5
+sleep 10
 echo -e "\nCREATE kafka connector ticket-connector...."
 curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @debezium/ticket-connector.json
 sleep 5
@@ -84,19 +92,4 @@ sleep 5
 echo -e "\nStart Payment Application container..."
 docker run -d --name payment -p 8100:8080 --link postgres:postgres --link zookeeper:zookeeper --link kafka:kafka hifly81/quarkus-payment-service
 echo -e "\nPayment Application started."
-
-########################### Verify Environment
-sleep 5
-echo -e "\nAdd 1 ticket..."
-echo -e "\nResponse:"
-curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8080/tickets -d @ticket/tickets.json
-sleep 5
-echo -e "\n\nVerify TicketEvent Table..."
-docker exec -it postgres psql -h localhost -p 5432 -U postgres -d tickets -c 'select * from ticketevent;'
-sleep 5
-echo -e "\n\nVerify OrderEvent Table..."
-docker exec -it postgres psql -h localhost -p 5432 -U postgres -d insurances -c 'select * from orderevent;'
-sleep 5
-echo -e "\n\nVerify PaymentEvent Table..."
-docker exec -it postgres psql -h localhost -p 5432 -U postgres -d payments -c 'select * from paymentevent;'
 

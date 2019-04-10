@@ -35,7 +35,7 @@ public class PaymentsEventConsumer {
 
         }
         catch (Throwable t) {
-
+            t.printStackTrace();
         }
         return message.ack();
     }

@@ -31,7 +31,7 @@ public class TicketEvent implements Serializable {
     @Column(nullable = false)
     private Double totalCost;
 
-    private Boolean insuranceRequired;
+    private String insuranceRequired;
 
     private Instant createdOn;
 
@@ -91,11 +91,11 @@ public class TicketEvent implements Serializable {
         this.totalCost = totalCost;
     }
 
-    public Boolean getInsuranceRequired() {
+    public String getInsuranceRequired() {
         return insuranceRequired;
     }
 
-    public void setInsuranceRequired(Boolean insuranceRequired) {
+    public void setInsuranceRequired(String insuranceRequired) {
         this.insuranceRequired = insuranceRequired;
     }
 

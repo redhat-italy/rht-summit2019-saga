@@ -44,10 +44,10 @@ public class TicketEventRouter<R extends ConnectRecord<R>> implements Transforma
 
             //Optional fields
             Double totalcost = 0.0;
-            Boolean insurancerequired = false;
+            String insurancerequired = null;
             try {
                 totalcost = after.getFloat64("totalcost");
-                insurancerequired = after.getBoolean("insurancerequired");
+                insurancerequired = after.getString("insurancerequired");
             } catch (Exception ex) {}
 
             Schema valueSchema = SchemaBuilder.struct()

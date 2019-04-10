@@ -52,6 +52,7 @@ public class TicketService {
         ticketEvent.setItemId(ticket.getId());
         ticketEvent.setTotalCost(ticket.getTotalCost());
         ticketEvent.setItemEventType(TicketEventType.TICKET_CREATED);
+        ticketEvent.setInsuranceRequired(ticket.getInsuranceRequired());
 
         entityManager.persist(ticketEvent);
         entityManager.flush();
@@ -86,24 +87,35 @@ public class TicketService {
     @Transactional
     public void onPaymentReceived(String correlationId, JsonNode json) {
 
-        String accountId = json.get("accountid").asText();
         String itemEventType = json.get("itemeventtype").asText();
+
+        LOGGER.info("Received payment event: orderId {} - type {}" , correlationId, itemEventType);
 
         if(eventService.isEventProcessed(correlationId)) {
             LOGGER.error("A payment event with same orderId {} already processed, discard!", correlationId);
             return;
         }
 
+        LOGGER.info("Finding ticket for orderId {} - state {}" , correlationId, TicketState.TICKET_BOOKED_PENDING);
+
         //find ticket
         Ticket ticket = findTicketsByOrderIdAndState(correlationId, TicketState.TICKET_BOOKED_PENDING);
         if(ticket != null) {
+
+            LOGGER.info("Found ticket {}", ticket.getId());
+
             //verify item
-            if(itemEventType == PaymentEventType.PAYMENT_ACCEPTED.name()) {
+            if(itemEventType.equals(PaymentEventType.PAYMENT_ACCEPTED.name())) {
                 ticket.setState(TicketState.TICKET_BOOKED);
 
-            } else if(itemEventType == PaymentEventType.PAYMENT_REFUSED.name()) {
+            } else if(itemEventType.equals(PaymentEventType.PAYMENT_REFUSED.name())) {
                 ticket.setState(TicketState.TICKET_PAYMENT_REFUSED);
             }
+
+            entityManager.merge(ticket);
+            entityManager.flush();
+
+            LOGGER.info("Ticket {} - new state {}", itemEventType);
         }
 
         //create ProcessedEvent

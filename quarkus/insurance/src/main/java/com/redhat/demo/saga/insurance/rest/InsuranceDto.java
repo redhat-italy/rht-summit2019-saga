@@ -1,26 +1,21 @@
-package com.redhat.demo.saga.ticket.rest;
+package com.redhat.demo.saga.insurance.rest;
 
-import com.redhat.demo.saga.ticket.model.TicketState;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection
-public class TicketDto {
+public class InsuranceDto {
 
     private Long id;
 
     private String orderId;
 
-    private TicketState state;
+    private Long ticketId;
 
     private String accountId;
 
     private String name;
 
-    private String numberOfPersons;
-
-    private Double totalCost;
-
-    private String insuranceRequired;
+    private Double insuranceCost;
 
     private String messageOnTicket;
 
@@ -42,12 +37,12 @@ public class TicketDto {
         this.orderId = orderId;
     }
 
-    public TicketState getState() {
-        return state;
+    public Long getTicketId() {
+        return ticketId;
     }
 
-    public void setState(TicketState state) {
-        this.state = state;
+    public void setTicketId(Long ticketId) {
+        this.ticketId = ticketId;
     }
 
     public String getAccountId() {
@@ -66,20 +61,12 @@ public class TicketDto {
         this.name = name;
     }
 
-    public String getNumberOfPersons() {
-        return numberOfPersons;
+    public Double getInsuranceCost() {
+        return insuranceCost;
     }
 
-    public void setNumberOfPersons(String numberOfPersons) {
-        this.numberOfPersons = numberOfPersons;
-    }
-
-    public Double getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(Double totalCost) {
-        this.totalCost = totalCost;
+    public void setInsuranceCost(Double insuranceCost) {
+        this.insuranceCost = insuranceCost;
     }
 
     public String getMessageOnTicket() {
@@ -96,13 +83,5 @@ public class TicketDto {
 
     public void setMessageSeverityTicket(String messageSeverityTicket) {
         this.messageSeverityTicket = messageSeverityTicket;
-    }
-
-    public String getInsuranceRequired() {
-        return insuranceRequired;
-    }
-
-    public void setInsuranceRequired(String insuranceRequired) {
-        this.insuranceRequired = insuranceRequired;
     }
 }
