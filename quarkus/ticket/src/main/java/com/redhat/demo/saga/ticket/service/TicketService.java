@@ -51,7 +51,7 @@ public class TicketService {
 
         existing = findTicketsByOrderIdAndState(ticket.getOrderId(), TicketState.TICKET_PAYMENT_REFUSED);
         if(existing != null) {
-            LOGGER.error("orderId {} already refuse for account {}", existing.getOrderId(), ticket.getAccountId());
+            LOGGER.error("orderId {} already refused for account {}", existing.getOrderId(), ticket.getAccountId());
             existing.setMessageSeverityTicket("ERROR");
             existing.setMessageOnTicket("Already refused, same orderId!");
             return existing;
