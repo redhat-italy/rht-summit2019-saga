@@ -33,9 +33,9 @@ cd quarkus/
 ./test-saga-failed.sh
 ```
 
-1 ticket will be created (payload in file ticket/tickets.json).
+2 tickets will be created.
 
-1 insurance will be created (payload in file insurance/insurances.json).
+2 insurances will be created.
 
 This is the final state inside the microservices databases at the end of the 2 sagas:
 
