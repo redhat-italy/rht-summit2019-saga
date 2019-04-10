@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 
 import static com.redhat.demo.saga.insurance.model.InsuranceState.INSURANCE_NOT_NEEDED;
-import static com.redhat.demo.saga.insurance.model.InsuranceState.INSURANCE_PREPARING;
+import static com.redhat.demo.saga.insurance.model.InsuranceState.INSURANCE_PREPARED;
 
 @ApplicationScoped
 public class InsuranceService {
@@ -45,12 +45,12 @@ public class InsuranceService {
         }
 
         //find the insurance
-        existing = findInsurancesByOrderIdAndState(insurance.getOrderId(), INSURANCE_PREPARING);
+        existing = findInsurancesByOrderIdAndState(insurance.getOrderId(), INSURANCE_PREPARED);
         if(existing == null) {
-            LOGGER.warn("No insurance required for orderId {}", insurance.getOrderId());
+            LOGGER.warn("No insurance in state PREPARED for orderId {}", insurance.getOrderId());
             existing = new Insurance();
-            existing.setMessageSeverityTicket("WARN");
-            existing.setMessageOnTicket("No insurance required!");
+            existing.setMessageSeverityTicket("ERROR");
+            existing.setMessageOnTicket("No insurance PREPARED!");
             return existing;
         }
 
@@ -129,7 +129,7 @@ public class InsuranceService {
 
                 //create insurance
                 Insurance insurance = new Insurance();
-                insurance.setState(INSURANCE_PREPARING);
+                insurance.setState(INSURANCE_PREPARED);
                 insurance.setOrderId(orderId);
                 insurance.setAccountId(accountId);
                 insurance.setTicketId(itemId);
@@ -216,7 +216,7 @@ public class InsuranceService {
             entityManager.merge(insurance);
             entityManager.flush();
 
-            LOGGER.info("Insurance {} - new state {}", itemEventType);
+            LOGGER.info("Insurance {} - new state {}", insurance.getId(), itemEventType);
         }
 
         //create ProcessedEvent

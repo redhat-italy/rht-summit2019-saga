@@ -5,8 +5,8 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-@NamedQuery(name = "ProcessedEvent.findByCorrelationId",
-        query = "SELECT p FROM ProcessedEvent p where p.correlationId = :correlationId")
+@NamedQuery(name = "ProcessedEvent.findByEventType",
+        query = "SELECT p FROM ProcessedEvent p where p.correlationId = :correlationId and p.eventType = :eventType")
 public class ProcessedEvent implements Serializable {
 
     @Id

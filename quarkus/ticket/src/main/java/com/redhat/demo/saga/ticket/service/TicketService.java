@@ -32,6 +32,7 @@ public class TicketService {
     @Transactional
     public Ticket bookTicket(Ticket ticket) {
 
+
         Ticket existing = findTicketsByAccountAndState(ticket.getAccountId(), TicketState.TICKET_BOOKED_PENDING);
         if(existing != null) {
             LOGGER.error("A pending booking with orderId {} exists for account {}", existing.getOrderId(), ticket.getAccountId());
@@ -39,6 +40,23 @@ public class TicketService {
             existing.setMessageOnTicket("Pending booking, same account!");
             return existing;
         }
+
+        existing = findTicketsByOrderIdAndState(ticket.getOrderId(), TicketState.TICKET_BOOKED);
+        if(existing != null) {
+            LOGGER.error("orderId {} already booked for account {}", existing.getOrderId(), ticket.getAccountId());
+            existing.setMessageSeverityTicket("ERROR");
+            existing.setMessageOnTicket("Already booked, same orderId!");
+            return existing;
+        }
+
+        existing = findTicketsByOrderIdAndState(ticket.getOrderId(), TicketState.TICKET_PAYMENT_REFUSED);
+        if(existing != null) {
+            LOGGER.error("orderId {} already refuse for account {}", existing.getOrderId(), ticket.getAccountId());
+            existing.setMessageSeverityTicket("ERROR");
+            existing.setMessageOnTicket("Already refused, same orderId!");
+            return existing;
+        }
+
 
         ticket.setState(TicketState.TICKET_BOOKED_PENDING);
 
@@ -91,7 +109,7 @@ public class TicketService {
 
         LOGGER.info("Received payment event: orderId {} - type {}" , correlationId, itemEventType);
 
-        if(eventService.isEventProcessed(correlationId)) {
+        if(eventService.isEventProcessed(correlationId, itemEventType)) {
             LOGGER.error("A payment event with same orderId {} already processed, discard!", correlationId);
             return;
         }
@@ -115,7 +133,7 @@ public class TicketService {
             entityManager.merge(ticket);
             entityManager.flush();
 
-            LOGGER.info("Ticket {} - new state {}", itemEventType);
+            LOGGER.info("Ticket {} - new state {}", ticket.getId(), itemEventType);
         }
 
         //create ProcessedEvent

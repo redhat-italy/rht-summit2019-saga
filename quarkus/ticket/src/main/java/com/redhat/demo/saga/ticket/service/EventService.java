@@ -27,16 +27,17 @@ public class EventService {
         return processedEvent;
     }
 
-    @Transactional
-    public boolean isEventProcessed(String orderId) {
-        ProcessedEvent processedEvent = null;
+    public boolean isEventProcessed(String orderId, String eventType) {
+        ProcessedEvent processedEvent;
         try {
 
-            processedEvent = (ProcessedEvent) entityManager.createNamedQuery("ProcessedEvent.findByCorrelationId")
+            processedEvent = (ProcessedEvent) entityManager.createNamedQuery("ProcessedEvent.findByEventType")
                     .setParameter("correlationId", orderId)
+                    .setParameter("eventType", eventType)
                     .getSingleResult();
 
         } catch (NoResultException nre) {
+            LOGGER.info("ProcessedEvent not found {} - {}", orderId, eventType);
             return false;
         }
         return processedEvent != null;
