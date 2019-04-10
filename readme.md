@@ -39,17 +39,17 @@ cd quarkus/
 
 This is the final state inside the microservices databases at the end of the 2 sagas:
 
-![ScreenShot 1](images/ticketevent.png)
+![ScreenShot 1](quarkus/images/ticketevent.png)
 
-![ScreenShot 2](images/orderevent.png)
+![ScreenShot 2](quarkus/images/orderevent.png)
 
-![ScreenShot 3](images/paymentevent.png)
+![ScreenShot 3](quarkus/images/paymentevent.png)
 
-![ScreenShot 4](images/tickettable.png)
+![ScreenShot 4](quarkus/images/tickettable.png)
 
-![ScreenShot 5](images/insurancetable.png)
+![ScreenShot 5](quarkus/images/insurancetable.png)
 
-![ScreenShot 6](images/accounttable.png)
+![ScreenShot 6](quarkus/images/accounttable.png)
 
 ### Deploy on OpenShift
 
