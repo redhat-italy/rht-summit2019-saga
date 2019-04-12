@@ -22,7 +22,7 @@ docker exec -it postgres psql -h localhost -p 5432 -U postgres -d tickets -c 'se
 sleep 5
 echo -e "\nAdd 1 insurance for ticket:$ticketId"
 sed -i -e "s/ticketplaceholder/$ticketId/g" insurance/insurances.json
-cat insurance/insurances.json
+cat insurance/insurances-test2.json
 sleep 5
 echo -e "\nResponse:"
 curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8090/insurances -d @insurance/insurances-test2.json

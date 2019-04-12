@@ -1,12 +1,8 @@
 #!/bin/bash
 
 ocp_admin_url=
-ocp_docker_registry=
-ocp_user=
 ocp_user_token=$(oc whoami -t)
 ocp_namespace=saga-playground
-image_ticket_name=ticket
-image_ticket_version=latest
 
 #create ocp project
 oc login ${ocp_admin_url} --token ${ocp_user_token}

@@ -17,6 +17,7 @@ echo -e "\nDeleting Docker containers running for Debezium...."
 docker stop $(docker ps -a | grep connect | cut -d ' ' -f 1)
 docker stop $(docker ps -a | grep kafka | cut -d ' ' -f 1)
 docker stop $(docker ps -a | grep zookeeper | cut -d ' ' -f 1)
+docker stop $(docker ps -a | grep elk | cut -d ' ' -f 1)
 docker stop $(docker ps -a | grep postgres | cut -d ' ' -f 1)
 docker stop $(docker ps -a | grep ticket | cut -d ' ' -f 1)
 docker stop $(docker ps -a | grep insurance | cut -d ' ' -f 1)
@@ -24,6 +25,7 @@ docker stop $(docker ps -a | grep payment| cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep connect | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep kafka | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep zookeeper | cut -d ' ' -f 1)
+docker rm $(docker ps -a | grep elk | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep postgres | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep ticket | cut -d ' ' -f 1)
 docker rm $(docker ps -a | grep insurance | cut -d ' ' -f 1)
@@ -46,6 +48,12 @@ sleep 5
 echo -e "\nCREATE insurances database...."
 docker exec -it postgres psql -h localhost -p 5432 -U postgres -c 'CREATE DATABASE insurances;'
 echo -e "\nPostgresql started."
+
+############################ Elastic Search + Kibana
+sleep 5
+echo -e "\nStart Elastic Search + Kibana container...."
+docker run -d --name elk -p 9200:9200 -p 5601:5601 nshou/elasticsearch-kibana
+echo -e "\nElastic Search + Kibana started."
 
 ############################ Zookeeper
 sleep 5
