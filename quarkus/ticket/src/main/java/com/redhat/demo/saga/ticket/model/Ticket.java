@@ -4,6 +4,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table(
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"orderid", "state"})
+)
 @NamedQuery(name = "Ticket.findByAccountAndState",
         query = "SELECT t FROM Ticket t where t.accountId = :accountId and t.state = :state")
 @NamedQuery(name = "Ticket.findByOrderIdAndState",

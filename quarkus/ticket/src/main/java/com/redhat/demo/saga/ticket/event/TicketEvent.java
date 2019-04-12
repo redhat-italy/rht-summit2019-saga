@@ -7,6 +7,10 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
+@Table(
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"correlationid", "itemeventtype"})
+)
 public class TicketEvent implements Serializable {
 
     @Id

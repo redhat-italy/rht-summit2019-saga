@@ -4,6 +4,10 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
+@Table(
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"correlationid", "eventtype"})
+)
 @NamedQuery(name = "ProcessedEvent.findByEventType",
         query = "SELECT p FROM ProcessedEvent p where p.correlationId = :correlationId and p.eventType = :eventType")
 public class ProcessedEvent {

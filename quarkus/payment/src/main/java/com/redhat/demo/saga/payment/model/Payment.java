@@ -2,8 +2,11 @@ package com.redhat.demo.saga.payment.model;
 
 import javax.persistence.*;
 
-@Entity(name = "Payment")
-@Table(name = "payment")
+@Entity
+@Table(
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"orderid", "state"})
+)
 @NamedQuery(name = "Payment.findByOrder",
         query = "SELECT p FROM Payment p where p.orderId = :orderId")
 public class Payment {

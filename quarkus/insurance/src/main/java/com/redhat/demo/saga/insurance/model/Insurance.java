@@ -3,6 +3,10 @@ package com.redhat.demo.saga.insurance.model;
 import javax.persistence.*;
 
 @Entity
+@Table(
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"orderid", "state", "ticketid"})
+)
 @NamedQuery(name = "Insurance.findByAccountAndState",
         query = "SELECT i FROM Insurance i where i.accountId = :accountId and i.state = :state")
 @NamedQuery(name = "Insurance.findByOrderIdAndState",

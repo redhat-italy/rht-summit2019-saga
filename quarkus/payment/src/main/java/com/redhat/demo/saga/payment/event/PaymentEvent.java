@@ -6,6 +6,10 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
+@Table(
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"correlationid", "itemeventtype"})
+)
 public class PaymentEvent {
 
     @Id
