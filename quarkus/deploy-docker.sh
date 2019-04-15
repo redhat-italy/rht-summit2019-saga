@@ -52,7 +52,11 @@ echo -e "\nPostgresql started."
 ############################ Elastic Search + Kibana
 sleep 5
 echo -e "\nStart Elastic Search + Kibana container...."
-docker run -d --name elk -p 9200:9200 -p 5601:5601 nshou/elasticsearch-kibana
+docker run -d --name elk -p 9200:9200 -p 9300:9300 -p 5601:5601 nshou/elasticsearch-kibana
+sleep 15
+echo -e "\nCreate index orders..."
+curl -X PUT http://localhost:9200/orders
+curl -X GET http://localhost:9200/_cat/indices?v
 echo -e "\nElastic Search + Kibana started."
 
 ############################ Zookeeper
@@ -70,7 +74,7 @@ echo -e "\nKafka started."
 ############################ Debezium - Kafka Connect with transformation
 sleep 5
 echo -e "\nStart Debezium Kafka connect container...."
-docker run -d --name connect -p 8083:8083 -e BOOTSTRAP_SERVERS=kafka:9092 -e GROUP_ID=1 -e CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE=false -e CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE=false -e CONFIG_STORAGE_TOPIC=my-connect-configs -e OFFSET_STORAGE_TOPIC=my-connect-offsets -e ADVERTISED_HOST_NAME=${DOCKER_HOST} --link zookeeper:zookeeper --link postgres:postgres --link kafka:kafka hifly81/debezium-connect
+docker run -d --name connect -p 8083:8083 -e es-host=http://elk:9200 -e BOOTSTRAP_SERVERS=kafka:9092 -e GROUP_ID=1 -e CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE=false -e CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE=false -e CONFIG_STORAGE_TOPIC=my-connect-configs -e OFFSET_STORAGE_TOPIC=my-connect-offsets -e ADVERTISED_HOST_NAME=${DOCKER_HOST} --link zookeeper:zookeeper --link postgres:postgres --link kafka:kafka --link elk:elk hifly81/debezium-connect
 sleep 10
 echo -e "\nCREATE kafka connector ticket-connector...."
 curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @debezium/ticket-connector.json

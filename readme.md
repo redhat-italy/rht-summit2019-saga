@@ -19,6 +19,7 @@ Images are downloaded from docker hub.
 
 Containers:
  - Postgres (image debezium/postgres) on local port 5432
+ - Elastic Search + Kibana (image nshou/elasticsearch-kibana) on local port 9200 and 5601 (kibana)
  - Zookeeper (image debezium/zookeeper) on local port 2181
  - Kafka (image debezium/kafka) on local port 9092
  - Kafka Connect + Debezium (image hifly81/debezium-connect) on local port 8083
@@ -37,6 +38,28 @@ cd quarkus/
 
 2 insurances will be created.
 
+### Deploy on OpenShift
+
+Launch the bootstrap script to create your namespace.<br>
+Images are downloaded from docker hub.
+
+Containers:
+ - Postgres (image debezium/postgres)
+ - Zookeeper (image debezium/zookeeper)
+ - Elastic + Kibana (image nshou/elasticsearch-kibana)
+ - Kafka (image debezium/kafka)
+ - Kafka Connect + Debezium (image hifly81/debezium-connect)
+ - Ticket Service (image hifly81/quarkus-ticket-service)
+ - Insurance Service (image hifly81/quarkus-insurance-service)
+ - Payment Service (image hifly81/quarkus-payment-service)
+
+```bash
+cd quarkus/
+./deploy-ocp.sh
+```
+
+### Verification
+
 This is the final state inside the microservices databases at the end of the 2 sagas:
 
 ![ScreenShot 1](quarkus/images/ticketevent.png)
@@ -51,21 +74,6 @@ This is the final state inside the microservices databases at the end of the 2 s
 
 ![ScreenShot 6](quarkus/images/accounttable.png)
 
-### Deploy on OpenShift
+Events as stored in Elastic Search (Kibana view):
 
-Launch the bootstrap script to create your namespace.<br>
-Images are downloaded from docker hub.
-
-Containers:
- - Postgres (image debezium/postgres)
- - Zookeeper (image debezium/zookeeper)
- - Kafka (image debezium/kafka)
- - Kafka Connect + Debezium (image hifly81/debezium-connect)
- - Ticket Service (image hifly81/quarkus-ticket-service)
- - Insurance Service (image hifly81/quarkus-insurance-service)
- - Payment Service (image hifly81/quarkus-payment-service)
-
-```bash
-cd quarkus/
-./deploy-ocp.sh
-```
+![ScreenShot 7](quarkus/images/kibana.png)

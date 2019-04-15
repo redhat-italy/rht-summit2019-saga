@@ -1,5 +1,8 @@
 package com.redhat.demo.saga.connect;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.redhat.demo.saga.elasticsearch.EsClient;
+import com.redhat.demo.saga.elasticsearch.KafkaUtil;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.ConnectRecord;
 import org.apache.kafka.connect.data.Schema;
@@ -69,6 +72,10 @@ public class TicketEventRouter<R extends ConnectRecord<R>> implements Transforma
 
             Headers headers = record.headers();
             headers.addString("correlationid", key);
+
+            //Add to ES
+            JsonNode jsonNode = KafkaUtil.convertToJson(valueSchema, value);
+            EsClient.addOrder(jsonNode.toString(), key);
 
             return record.newRecord(TOPIC, null, Schema.STRING_SCHEMA, key, valueSchema, value,
                     record.timestamp(), headers);
