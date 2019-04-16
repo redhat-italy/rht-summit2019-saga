@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: ${project.artifactId}
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+            - name: DB_USERNAME
+              valueFrom:
+                 secretKeyRef:
+                   name: ticket-database-secret
+                   key: user
+            - name: DB_PASSWORD
+              valueFrom:
+                 secretKeyRef:
+                   name: ticket-database-secret
+                   key: password
+            - name: GC_MAX_METASPACE_SIZE
+              value: "150"
+            - name: JAVA_OPTIONS
+              value: "-Dswarm.datasources.data-sources.MyDS.connection-url=jdbc:postgresql://$(TICKET_DATABASE_SERVICE_HOST):$(TICKET_DATABASE_SERVICE_PORT)/ticket -Dswarm.datasources.data-sources.MyDS.user-name=$(DB_USERNAME) -Dswarm.datasources.data-sources.MyDS.password=$(DB_PASSWORD) -Dswarm.datasources.data-sources.MyDS.driver-name=postgresql -Dlra.http.host=lra-coordinator -Dlra.http.port=8080"

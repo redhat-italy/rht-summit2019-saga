@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: ${project.artifactId}
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+            - name: GC_MAX_METASPACE_SIZE
+              value: "150"
+            - name: JAVA_OPTIONS
+              value: "-Dlra.http.host=lra-coordinator -Dlra.http.port=8080"

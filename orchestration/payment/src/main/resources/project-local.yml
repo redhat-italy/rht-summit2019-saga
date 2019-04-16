@@ -1,0 +1,8 @@
+swarm:
+  datasources:
+    data-sources:
+      MyDS:
+        driver-name: h2
+        connection-url: jdbc:h2:mem:payment;DB_CLOSE_DELAY=-1;INIT=CREATE TABLE PAYMENT (ID SERIAL PRIMARY KEY NOT NULL, orderId INT, state VARCHAR(50), accountId VARCHAR(100), orderCost NUMERIC);
+        user-name: sa
+        password: sa

@@ -1,0 +1,9 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ${project.artifactId}
+spec:
+  path: /insurances
+  to:
+    kind: Service
+    name: insurance-lra-thorntail

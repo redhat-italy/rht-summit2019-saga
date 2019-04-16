@@ -1,0 +1,9 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ${project.artifactId}
+spec:
+  path: /tickets
+  to:
+    kind: Service
+    name: ticket-lra-thorntail

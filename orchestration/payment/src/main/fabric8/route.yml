@@ -1,0 +1,9 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ${project.artifactId}
+spec:
+  path: /payments
+  to:
+    kind: Service
+    name: payment-lra-thorntail
