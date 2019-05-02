@@ -43,7 +43,7 @@ cd simulation/
 In order to create the demo on your openshift environment, you need:
  - a ocp user with cluster-admin role
  - oc client installed on your machine
- - AMQ Streams 1.1 for OCP downloaded from Red Hat
+ - AMQ Streams 1.1 for OCP downloaded from Red Hat<br>
  https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&product=jboss.amq.streams
 
 Follow the instruction to create the demo:
@@ -122,6 +122,7 @@ cd choreography/
 
 Run a simulation:
 
+```bash
 cd simulation/
 ./test-saga.sh
 ./test-saga-failed.sh
