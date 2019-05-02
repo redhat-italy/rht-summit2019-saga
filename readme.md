@@ -66,8 +66,12 @@ oc exec $(oc get pods | grep postgres | cut -d " " -f1) -- bash -c 'psql -h loca
 oc exec $(oc get pods | grep postgres | cut -d " " -f1) -- bash -c 'psql -h localhost -p 5432 -U postgres -c "CREATE DATABASE insurances;"'
 ```
 
-Install AMQ Streams cluster operator and a kafka cluster with 3 brokers (ephemeral and with jmx metrics):
+Install AMQ Streams cluster operator and a kafka cluster with 3 brokers (ephemeral and with jmx metrics).<br>
+This step requires that you've downloaded and unpacked the AMQ Streams zip archive for OCP (for more info about the installation, https://access.redhat.com/documentation/en-us/red_hat_amq/7.2/html-single/using_amq_streams_on_openshift_container_platform/index)
+
+
 ```bash
+sed -i 's/namespace: .*/namespace: saga-playgrounds/' install/cluster-operator/*RoleBinding*.yaml
 oc apply -f install/cluster-operator/020-RoleBinding-strimzi-cluster-operator.yaml -n saga-playgrounds
 oc apply -f install/cluster-operator/031-RoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n saga-playgrounds
 oc apply -f install/cluster-operator/032-RoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml -n saga-playgrounds
@@ -104,6 +108,7 @@ Install prometheus and grafana:
 wget https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/0.10.0/metrics/examples/prometheus/kubernetes.yaml
 mv kubernetes.yaml prometheus.yaml
 oc apply -f prometheus.yaml -n saga-playgrounds
+oc adm policy add-cluster-role-to-user prometheus -z prometheus-server
 wget https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/0.10.0/metrics/examples/grafana/kubernetes.yaml
 mv kubernetes.yaml grafana.yaml
 oc apply -f grafana.yaml -n saga-playgrounds
@@ -111,11 +116,17 @@ oc expose svc/grafana
 ```
 
 Download and import grafana dashboard for kafka and zookeeper, dashboard can be downloaded at:<br>
-https://github.com/strimzi/strimzi-kafka-operator/blob/master/metrics/examples/grafana/strimzi-kafka.json<br>
-https://github.com/strimzi/strimzi-kafka-operator/blob/master/metrics/examples/grafana/strimzi-zookeeper.json
+wget https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/master/metrics/examples/grafana/strimzi-kafka.json<br>
+wget https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/master/metrics/examples/grafana/strimzi-zookeeper.json
 
 Follow the instruction to import the grafana dashboards:<br>
 https://strimzi.io/docs/latest/#grafana_dashboard
+
+Grafana dashboards:
+
+![ScreenShot 1](choreography/images/kafka.png)
+
+![ScreenShot 2](choreography/images/zookeeper.png)
 
 
 ### Launch on local env - linux and mac
