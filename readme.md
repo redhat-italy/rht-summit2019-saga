@@ -11,6 +11,94 @@ Launch the script to create the native images:
 cd choreography/
 ./build-image.sh
 ```
+### Launch on OpenShift
+
+An already running OCP cluster is available at:<br>
+https://ocp.nodisk.space:8443/console/project/saga-playgrounds/overview
+
+Ticket service:<br>
+http://ticket-service-quarkus-saga-playgrounds.apps.nodisk.space
+
+Insurance service:<br>
+http://insurance-service-quarkus-saga-playgrounds.apps.nodisk.space
+
+Images are downloaded from docker hub and from quay.io.
+
+Images:
+ - Postgres (image debezium/postgres) on port 5432
+ - AMQ Streams (Zookeeper on port 2181 and Kafka on port 9092)
+ - Kafka Connect + Debezium (image quay.io/bridlos/outbox-connect) on port 8083
+ - Ticket Service (image quay.io/bridlos/ticket-service-quarkus) on port 8080
+ - Insurance Service (image quay.io/bridlos/insurance-service-quarkus) on port 8080
+ - Payment Service (image quay.io/bridlos/payment-service-quarkus) on port 8080
+
+ Run a simulation:
+
+```bash
+cd simulation/
+./test-ocp-saga.sh
+./test-ocp-saga-failed.sh
+```
+
+In order to create the demo on your openshift environment, you need:
+ - a ocp user with cluster-admin role
+ - oc client installed on your machine
+ - AMQ Streams 1.1 for OCP downloaded from Red Hat
+ https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&product=jboss.amq.streams
+
+Follow the instruction to create the demo:
+
+Login to OCP, create a new project, create e new service account runasanyuid (postgres must run as root):
+```bash
+oc login <ocp_master_url> --token=<ocp_user_token>
+oc new-project saga-playgrounds
+oc create serviceaccount runasanyuid
+```
+
+Create postgres, then create tickets, insurances and payments database:
+```bash
+oc new-app debezium/postgres
+oc patch dc/postgres --patch '{"spec":{"template":{"spec":{"serviceAccountName": "runasanyuid"}}}}'
+
+
+oc exec $(oc get pods | grep postgres | cut -d " " -f1) -- bash -c 'psql -h localhost -p 5432 -U postgres -c "CREATE DATABASE tickets;"'
+oc exec $(oc get pods | grep postgres | cut -d " " -f1) -- bash -c 'psql -h localhost -p 5432 -U postgres -c "CREATE DATABASE payments;"'
+oc exec $(oc get pods | grep postgres | cut -d " " -f1) -- bash -c 'psql -h localhost -p 5432 -U postgres -c "CREATE DATABASE insurances;"'
+```
+
+Install AMQ Streams cluster operator and a kafka cluster with 3 brokers (ephemeral):
+```bash
+oc apply -f install/cluster-operator/020-RoleBinding-strimzi-cluster-operator.yaml -n saga-playgrounds
+oc apply -f install/cluster-operator/031-RoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n saga-playgrounds
+oc apply -f install/cluster-operator/032-RoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml -n saga-playgrounds
+oc apply -f install/cluster-operator -n saga-playgrounds
+oc apply -f examples/kafka/kafka-ephemeral.yaml
+```
+
+Create outbox-debezium application:
+```bash
+oc new-app quay.io/bridlos/outbox-connect -e ES_DISABLED=true
+oc expose svc/outbox-connect
+```
+
+Install debezium connectors:
+```bash
+cd debezium/connector/
+
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" http://<outbox-connect-url>/connectors/ -d @ticket-connector.json
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" http://<outbox-connect-url>/connectors/ -d @order-connector.json
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" http://<outbox-connect-url>/connectors/ -d @payment-connector.json
+```
+
+Install ticket, insurance and payment microservice:
+```bash
+oc new-app quay.io/bridlos/ticket-service-quarkus
+oc expose svc/ticket-service-quarkus
+oc new-app quay.io/bridlos/insurance-service-quarkus
+oc expose svc/insurance-service-quarkus
+oc new-app quay.io/bridlos/payment-service-quarkus
+```
+
 
 ### Launch on local env - linux and mac
 
@@ -30,6 +118,9 @@ Images:
 ```bash
 cd choreography/
 ./deploy-docker.sh
+```
+
+Run a simulation:
 
 cd simulation/
 ./test-saga.sh
@@ -39,27 +130,6 @@ cd simulation/
 2 tickets will be created.
 
 2 insurances will be created.
-
-### Deploy on OpenShift
-
-An already running OCP cluster is available at:<br>
-https://ocp.nodisk.space:8443/console/project/saga-playgrounds/overview
-
-Images are downloaded from docker hub and from quay.io.
-
-Images:
- - Postgres (image debezium/postgres) on port 5432
- - AMQ Streams (Zookeeper on port 2181 and Kafka on port 9092)
- - Kafka Connect + Debezium (image quay.io/bridlos/outbox-connect) on port 8083
- - Ticket Service (image quay.io/bridlos/ticket-service-quarkus) on port 8080
- - Insurance Service (image quay.io/bridlos/insurance-service-quarkus) on port 8080
- - Payment Service (image quay.io/bridlos/payment-service-quarkus) on port 8080
-
-```bash
-cd simulation/
-./test-ocp-saga.sh
-./test-ocp-saga-failed.sh
-```
 
 ### Verification
 
