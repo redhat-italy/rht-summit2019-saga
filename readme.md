@@ -8,28 +8,30 @@ Saga microservices Playground
 Launch the script to create the native images:
 
 ```bash
-cd quarkus/
+cd choreography/
 ./build-image.sh
 ```
 
 ### Launch on local env - linux and mac
 
 Launch the bootstrap script to create the docker containers.<br>
-Images are downloaded from docker hub.
+Images are downloaded from docker hub and from quay.io.
 
-Containers:
+Images:
  - Postgres (image debezium/postgres) on local port 5432
  - Elastic Search + Kibana (image nshou/elasticsearch-kibana) on local port 9200 and 5601 (kibana)
  - Zookeeper (image debezium/zookeeper) on local port 2181
  - Kafka (image debezium/kafka) on local port 9092
- - Kafka Connect + Debezium (image hifly81/debezium-connect) on local port 8083
- - Ticket Service (image hifly81/quarkus-ticket-service) on local port 8080
- - Insurance Service (image hifly81/quarkus-insurance-service) on local port 8090
- - Payment Service (image hifly81/quarkus-payment-service) on local port 8100
+ - Kafka Connect + Debezium (image quay.io/bridlos/outbox-connect) on local port 8083
+ - Ticket Service (image quay.io/bridlos/ticket-service-quarkus) on local port 8080
+ - Insurance Service (image quay.io/bridlos/insurance-service-quarkus) on local port 8090
+ - Payment Service (image quay.io/bridlos/payment-service-quarkus) on local port 8100
 
 ```bash
-cd quarkus/
+cd choreography/
 ./deploy-docker.sh
+
+cd simulation/
 ./test-saga.sh
 ./test-saga-failed.sh
 ```
@@ -40,43 +42,44 @@ cd quarkus/
 
 ### Deploy on OpenShift
 
-Launch the bootstrap script to create your namespace.<br>
-Images are downloaded from docker hub.
+An already running OCP cluster is available at:<br>
+https://ocp.nodisk.space:8443/console/project/saga-playgrounds/overview
 
-Containers:
- - Postgres (image debezium/postgres)
- - Zookeeper (image debezium/zookeeper)
- - Elastic + Kibana (image nshou/elasticsearch-kibana)
- - Kafka (image debezium/kafka)
- - Kafka Connect + Debezium (image hifly81/debezium-connect)
- - Ticket Service (image hifly81/quarkus-ticket-service)
- - Insurance Service (image hifly81/quarkus-insurance-service)
- - Payment Service (image hifly81/quarkus-payment-service)
+Images are downloaded from docker hub and from quay.io.
+
+Images:
+ - Postgres (image debezium/postgres) on port 5432
+ - AMQ Streams (Zookeeper on port 2181 and Kafka on port 9092)
+ - Kafka Connect + Debezium (image quay.io/bridlos/outbox-connect) on port 8083
+ - Ticket Service (image quay.io/bridlos/ticket-service-quarkus) on port 8080
+ - Insurance Service (image quay.io/bridlos/insurance-service-quarkus) on port 8080
+ - Payment Service (image quay.io/bridlos/payment-service-quarkus) on port 8080
 
 ```bash
-cd quarkus/
-./deploy-ocp.sh
+cd simulation/
+./test-ocp-saga.sh
+./test-ocp-saga-failed.sh
 ```
 
 ### Verification
 
 This is the final state inside the microservices databases at the end of the 2 sagas:
 
-![ScreenShot 1](quarkus/images/ticketevent.png)
+![ScreenShot 1](choreography/images/ticketevent.png)
 
-![ScreenShot 2](quarkus/images/orderevent.png)
+![ScreenShot 2](choreography/images/orderevent.png)
 
-![ScreenShot 3](quarkus/images/paymentevent.png)
+![ScreenShot 3](choreography/images/paymentevent.png)
 
-![ScreenShot 4](quarkus/images/tickettable.png)
+![ScreenShot 4](choreography/images/tickettable.png)
 
-![ScreenShot 5](quarkus/images/insurancetable.png)
+![ScreenShot 5](choreography/images/insurancetable.png)
 
-![ScreenShot 6](quarkus/images/accounttable.png)
+![ScreenShot 6](choreography/images/accounttable.png)
 
-Events as stored in Elastic Search (Kibana view):
+Events as stored in Elastic Search (No Openshift) (Kibana view):
 
-![ScreenShot 7](quarkus/images/kibana.png)
+![ScreenShot 7](choreography/images/kibana.png)
 
 # Saga Orchestration with Eclipse Microprofile LRA and Openshift
 This project is an example of Saga orchestration implementation using Eclipse Microprofile LRA and Openshift.
@@ -124,7 +127,7 @@ $ ./test-saga.sh
 
 You should expect a result lile this
 ```sh
-./test-saga.sh 
+./test-saga.sh
 
 Start Test Saga
 
@@ -167,7 +170,7 @@ $ ./test-saga-failed.sh
 
 You should expect a result lile this
 ```sh
-./test-saga-failed.sh 
+./test-saga-failed.sh
 
 Start Test Saga
 
@@ -201,5 +204,3 @@ All the state of the entity should be `AVAILABLE` or `REFUSED`
 
 ## WARNING
 Pay attention that the two built in examples are not idempotent: use them as scaffold for other test or change at least the orderId value
-
-
