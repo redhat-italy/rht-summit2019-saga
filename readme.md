@@ -5,8 +5,10 @@ Saga microservices Playground
 
 ### Launch on OpenShift
 
-An already running OCP cluster is available at:<br>
+An already running ocp cluster is available at:<br>
 https://ocp.nodisk.space:8443/console/project/saga-playgrounds/overview
+
+These are the URLs of public microservices:
 
 Ticket service:<br>
 http://ticket-service-quarkus-saga-playgrounds.apps.nodisk.space
@@ -37,7 +39,7 @@ cd simulation/
 ./test-ocp-saga-failed.sh
 ```
 
-Watch a video of a simulation at (set video to quality 1080):<br>
+Watch a video of a simulation at (set video quality to 1080):<br>
 https://www.youtube.com/watch?v=7cLbRIc3TWU
 [![Alt text](http://www.myiconfinder.com/uploads/iconsets/32-32-3a1eef40f04875d93dd6545f2f1b727e-youtube.png)](https://www.youtube.com/watch?v=7cLbRIc3TWU)
 
@@ -49,7 +51,7 @@ In order to create the demo on your openshift environment, you need:
 
 Follow these instructions to create the demo:
 
-Login to OCP, create a new project, create e new service account runasanyuid (postgres must run as root):
+Login to ocp, create a new project, create e new service account runasanyuid (postgres must run as root):
 ```bash
 oc login <ocp_master_url> --token=<ocp_user_token>
 oc new-project saga-playgrounds
@@ -68,10 +70,12 @@ oc exec $(oc get pods | grep postgres | cut -d " " -f1) -- bash -c 'psql -h loca
 ```
 
 Install AMQ Streams cluster operator and a kafka cluster with 3 brokers (ephemeral and with prometheus metrics).<br>
-This step requires that you've downloaded and unpacked the AMQ Streams zip archive for OCP <br>(for more info about the installation, https://access.redhat.com/documentation/en-us/red_hat_amq/7.2/html-single/using_amq_streams_on_openshift_container_platform/index)
+This step requires that you've downloaded and unpacked the AMQ Streams zip archive for ocp <br>
+(for more info about the installation, https://access.redhat.com/documentation/en-us/red_hat_amq/7.2/html-single/using_amq_streams_on_openshift_container_platform/index)
 
 
 ```bash
+#replace the template namespace with saga-playgrounds
 sed -i 's/namespace: .*/namespace: saga-playgrounds/' install/cluster-operator/*RoleBinding*.yaml
 oc apply -f install/cluster-operator/020-RoleBinding-strimzi-cluster-operator.yaml -n saga-playgrounds
 oc apply -f install/cluster-operator/031-RoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n saga-playgrounds
