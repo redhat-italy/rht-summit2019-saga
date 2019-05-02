@@ -3,14 +3,6 @@ Saga microservices Playground
 
 ## Saga Choreography with Kafka, Debezium and Quarkus
 
-### Create Native Image
-
-Launch the script to create the native images:
-
-```bash
-cd choreography/
-./build-image.sh
-```
 ### Launch on OpenShift
 
 An already running OCP cluster is available at:<br>
@@ -180,6 +172,15 @@ This is the final state inside the microservices databases at the end of the 2 s
 Events as stored in Elastic Search (No Openshift) (Kibana view):
 
 ![ScreenShot 7](choreography/images/kibana.png)
+
+### Compile and Create Images
+
+Launch the script to compile and create the images:
+
+```bash
+cd choreography/
+./build-image.sh
+```
 
 # Saga Orchestration with Eclipse Microprofile LRA and Openshift
 This project is an example of Saga orchestration implementation using Eclipse Microprofile LRA and Openshift.
