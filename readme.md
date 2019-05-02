@@ -17,7 +17,7 @@ http://insurance-service-quarkus-saga-playgrounds.apps.nodisk.space
 Outbox connect service:<br>
 http://outbox-connect-service-quarkus-saga-playgrounds.apps.nodisk.space
 
-Images are downloaded from docker hub and from quay.io.
+Images are downloaded from docker hub and from https://quay.io
 
 Images:
  - Postgres (image debezium/postgres) on port 5432
@@ -27,7 +27,7 @@ Images:
  - Insurance Service (image quay.io/bridlos/insurance-service-quarkus) on port 8080
  - Payment Service (image quay.io/bridlos/payment-service-quarkus) on port 8080
 
- Elastic Search and Kibana are not insatlled in Openshift (available only for local installation).
+ Elastic Search and Kibana are not installed in Openshift (available only for local installation).
 
  Run a simulation:
 
@@ -37,14 +37,14 @@ cd simulation/
 ./test-ocp-saga-failed.sh
 ```
 
-Watch a video of a simulation at (set quality 1080):<br>
+Watch a video of a simulation at (set video to quality 1080):<br>
 https://www.youtube.com/watch?v=7cLbRIc3TWU
 [![Alt text](http://www.myiconfinder.com/uploads/iconsets/32-32-3a1eef40f04875d93dd6545f2f1b727e-youtube.png)](https://www.youtube.com/watch?v=7cLbRIc3TWU)
 
 In order to create the demo on your openshift environment, you need:
- - a ocp user with cluster-admin role
+ - ocp user with cluster-admin role
  - oc client installed on your machine (tested with 3.11.x)
- - AMQ Streams 1.1 for OCP downloaded from Red Hat<br>
+ - AMQ Streams 1.1 for ocp downloaded from Red Hat<br>
  https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&product=jboss.amq.streams
 
 Follow these instructions to create the demo:
@@ -120,7 +120,7 @@ Download and import grafana dashboard for kafka and zookeeper, dashboard can be 
 wget https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/master/metrics/examples/grafana/strimzi-kafka.json<br>
 wget https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/master/metrics/examples/grafana/strimzi-zookeeper.json
 
-Follow the instruction to import the grafana dashboards:<br>
+Follow the instruction to import the kafka and zookeeper grafana dashboards:<br>
 https://strimzi.io/docs/latest/#grafana_dashboard
 
 Grafana dashboards:
