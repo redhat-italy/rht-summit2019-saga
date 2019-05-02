@@ -1,7 +1,7 @@
 Saga microservices Playground
 =============================
 
-## Saga Choreography with Quarkus
+## Saga Choreography with Kafka, Debezium and Quarkus
 
 ### Create Native Image
 
