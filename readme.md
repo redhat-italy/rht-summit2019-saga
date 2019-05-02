@@ -66,18 +66,18 @@ oc exec $(oc get pods | grep postgres | cut -d " " -f1) -- bash -c 'psql -h loca
 oc exec $(oc get pods | grep postgres | cut -d " " -f1) -- bash -c 'psql -h localhost -p 5432 -U postgres -c "CREATE DATABASE insurances;"'
 ```
 
-Install AMQ Streams cluster operator and a kafka cluster with 3 brokers (ephemeral):
+Install AMQ Streams cluster operator and a kafka cluster with 3 brokers (ephemeral and with jmx metrics):
 ```bash
 oc apply -f install/cluster-operator/020-RoleBinding-strimzi-cluster-operator.yaml -n saga-playgrounds
 oc apply -f install/cluster-operator/031-RoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n saga-playgrounds
 oc apply -f install/cluster-operator/032-RoleBinding-strimzi-cluster-operator-topic-operator-delegation.yaml -n saga-playgrounds
 oc apply -f install/cluster-operator -n saga-playgrounds
-oc apply -f examples/kafka/kafka-ephemeral.yaml
+oc apply -f examples/metrics/kafka-metrics.yaml
 ```
 
-Create outbox-debezium application:
+Create outbox-connect application:
 ```bash
-oc new-app quay.io/bridlos/outbox-connect -e ES_DISABLED=true
+oc new-app quay.io/bridlos/outbox-connect -e ES_DISABLED=true -e BOOTSTRAP_SERVERS=my-cluster-kafka-bootstrap:9092 -e GROUP_ID=1 -e CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE=false -e CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE=false -e CONFIG_STORAGE_TOPIC=my-connect-configs -e OFFSET_STORAGE_TOPIC=my-connect-offsets
 oc expose svc/outbox-connect
 ```
 
@@ -98,6 +98,24 @@ oc new-app quay.io/bridlos/insurance-service-quarkus
 oc expose svc/insurance-service-quarkus
 oc new-app quay.io/bridlos/payment-service-quarkus
 ```
+
+Install prometheus and grafana:
+```bash
+wget https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/0.10.0/metrics/examples/prometheus/kubernetes.yaml
+mv kubernetes.yaml prometheus.yaml
+oc apply -f prometheus.yaml -n saga-playgrounds
+wget https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/0.10.0/metrics/examples/grafana/kubernetes.yaml
+mv kubernetes.yaml grafana.yaml
+oc apply -f grafana.yaml -n saga-playgrounds
+oc expose svc/grafana
+```
+
+Download and import grafana dashboard for kafka and zookeeper, dashboard can be downloaded at:<br>
+https://github.com/strimzi/strimzi-kafka-operator/blob/master/metrics/examples/grafana/strimzi-kafka.json<br>
+https://github.com/strimzi/strimzi-kafka-operator/blob/master/metrics/examples/grafana/strimzi-zookeeper.json
+
+Follow the instruction to import the grafana dashboards:<br>
+https://strimzi.io/docs/latest/#grafana_dashboard
 
 
 ### Launch on local env - linux and mac

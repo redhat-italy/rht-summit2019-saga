@@ -77,8 +77,6 @@ public class TicketEventRouter<R extends ConnectRecord<R>> implements Transforma
             JsonNode jsonNode = KafkaUtil.convertToJson(valueSchema, value);
             EsClient.addOrder(jsonNode.toString(), key);
 
-            System.out.println("\n\n\n\n\n\nSEND TICKET with value:" + value);
-
             return record.newRecord(TOPIC, null, Schema.STRING_SCHEMA, key, valueSchema, value,
                     record.timestamp(), headers);
         }
