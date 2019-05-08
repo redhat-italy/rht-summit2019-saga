@@ -1,10 +1,10 @@
 #!/bin/bash
 #title           :build-images.sh
 #description     :This script will create docker images for the SAGA Choreography env
-#author		 :hifly81
+#author		     :hifly81
 #date            :20190410
 #version         :0.1
-#usage		 :bash build-images.sh
+#usage		     :bash build-images.sh
 #notes           :requires: mvn, docker
 #==============================================================================
 

@@ -4,8 +4,8 @@
     <groupId>com.redhat.demo.saga</groupId>
     <artifactId>choreography</artifactId>
     <version>1.0</version>
-    <name>Saga Playgorund - Choreography</name>
-    <description>Saga Playgorund - Quarkus</description>
+    <name>Saga Playground - Choreography</name>
+    <description>Saga Playground - Quarkus</description>
     <packaging>pom</packaging>
 
     <properties>
