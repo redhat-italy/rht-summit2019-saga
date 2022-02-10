@@ -33,7 +33,7 @@
         <version.assertj>3.8.0</version.assertj>
         <version.awaitility>3.1.5</version.awaitility>
         <version.h2>1.4.187</version.h2>
-        <version.postgresql>9.4.1207</version.postgresql>
+        <version.postgresql>42.2.25</version.postgresql>
     </properties>
     <dependencyManagement>
         <dependencies>
