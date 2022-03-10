@@ -121,6 +121,10 @@ public class KafkaUtil {
                     }
                     return obj;
                 }
+                //missing default case
+                default:
+                    // add default case
+                    break;
             }
 
             throw new DataException("Couldn't convert " + value + " to JSON.");
