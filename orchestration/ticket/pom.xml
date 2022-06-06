@@ -28,7 +28,7 @@
     <name>Ticket Thorntail Microservice Long Running Action</name>
     <properties>
         <version.thorntail>2.3.0.Final</version.thorntail>
-        <version.resteasy>3.6.2.Final</version.resteasy>
+        <version.resteasy>3.14.0.Final</version.resteasy>
         <version.restassured>3.0.7</version.restassured>
         <version.assertj>3.8.0</version.assertj>
         <version.awaitility>3.1.5</version.awaitility>
